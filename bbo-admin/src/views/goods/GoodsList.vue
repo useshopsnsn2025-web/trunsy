@@ -111,6 +111,7 @@
       <el-button size="small" @click="handleBatchSetRecommend(1)" style="color: #409EFF;">设为推荐</el-button>
       <el-button size="small" @click="handleBatchSetRecommend(0)">取消推荐</el-button>
       <el-button size="small" @click="handleBatchStats">批量改数据</el-button>
+      <el-button size="small" @click="handleBatchPrice" style="color: #67C23A;">批量改价</el-button>
     </el-card>
 
     <!-- 数据表格 -->
@@ -615,6 +616,69 @@
       @imported="loadData"
     />
 
+    <!-- 批量改价弹窗 -->
+    <el-dialog v-model="priceDialogVisible" title="批量修改价格" width="500px">
+      <div style="margin-bottom: 20px; color: #606266; font-size: 14px;">
+        已选择 <strong>{{ selectedIds.length }}</strong> 个商品，在原价基础上调整价格
+      </div>
+
+      <el-form label-width="80px">
+        <el-form-item label="调整方式">
+          <el-radio-group v-model="priceAction" size="large">
+            <el-radio-button value="add">
+              <span style="color: #E6A23C;">↑ 加价</span>
+            </el-radio-button>
+            <el-radio-button value="reduce">
+              <span style="color: #F56C6C;">↓ 减价</span>
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="调整类型">
+          <el-radio-group v-model="priceMode">
+            <el-radio value="fixed">固定金额（USD）</el-radio>
+            <el-radio value="percent">按百分比（%）</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item :label="priceMode === 'fixed' ? '金额' : '百分比'">
+          <div style="width: 100%;">
+            <el-slider
+              v-model="priceValue"
+              :min="0"
+              :max="priceMode === 'fixed' ? 500 : 100"
+              :step="priceMode === 'fixed' ? 1 : 1"
+              :format-tooltip="(val: number) => priceMode === 'fixed' ? `$${val}` : `${val}%`"
+              show-input
+              style="padding-right: 20px;"
+            />
+          </div>
+        </el-form-item>
+
+        <el-form-item label="效果预览">
+          <div style="background: #f5f7fa; padding: 12px 16px; border-radius: 8px; width: 100%;">
+            <div style="color: #909399; font-size: 13px; margin-bottom: 6px;">
+              例：原价 $100.00 的商品
+            </div>
+            <div :style="{ color: priceAction === 'add' ? '#E6A23C' : '#F56C6C', fontSize: '18px', fontWeight: '600' }">
+              {{ priceAction === 'add' ? '↑' : '↓' }}
+              {{ priceMode === 'fixed' ? `$${priceValue.toFixed(2)}` : `${priceValue}%（$${(100 * priceValue / 100).toFixed(2)}）` }}
+              →
+              ${{ priceAction === 'add'
+                ? (100 + (priceMode === 'fixed' ? priceValue : 100 * priceValue / 100)).toFixed(2)
+                : Math.max(0.01, 100 - (priceMode === 'fixed' ? priceValue : 100 * priceValue / 100)).toFixed(2)
+              }}
+            </div>
+          </div>
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="priceDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="priceSubmitting" @click="submitBatchPrice">确认修改</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 导出商品数据弹窗 -->
     <el-dialog v-model="exportDialogVisible" title="下载商品数据" width="480px" :close-on-click-modal="false">
       <div v-if="!exportTaskId">
@@ -704,6 +768,7 @@ import {
   toggleHotGoods,
   toggleRecommendGoods,
   updateGoodsStats,
+  batchUpdatePrice,
   exportGoodsData,
   getExportProgress,
   downloadExportFile,
@@ -744,6 +809,13 @@ const statsBatchIds = ref<number[]>([])
 const statsForm = reactive({ views: 0, likes: 0, random: 10 })
 const categoryAttributes = ref<CategoryAttribute[]>([])
 const loadingAttributes = ref(false)
+
+// 批量改价相关
+const priceDialogVisible = ref(false)
+const priceSubmitting = ref(false)
+const priceAction = ref('add')
+const priceMode = ref('fixed')
+const priceValue = ref(10)
 
 // 导出商品数据相关
 const exportDialogVisible = ref(false)
@@ -1699,6 +1771,54 @@ function closeExportDialog() {
   if (exportPollTimer) {
     clearInterval(exportPollTimer)
     exportPollTimer = null
+  }
+}
+
+// ===== 批量改价 =====
+function handleBatchPrice() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning('请先勾选要改价的商品')
+    return
+  }
+  priceAction.value = 'add'
+  priceMode.value = 'fixed'
+  priceValue.value = 10
+  priceDialogVisible.value = true
+}
+
+async function submitBatchPrice() {
+  if (priceValue.value <= 0) {
+    ElMessage.warning('请设置调整数值')
+    return
+  }
+
+  const actionText = priceAction.value === 'add' ? '加价' : '减价'
+  const modeText = priceMode.value === 'fixed' ? `$${priceValue.value}` : `${priceValue.value}%`
+
+  try {
+    await ElMessageBox.confirm(
+      `确认对 ${selectedIds.value.length} 个商品${actionText} ${modeText}？`,
+      '确认修改',
+      { type: 'warning' }
+    )
+  } catch {
+    return
+  }
+
+  priceSubmitting.value = true
+  try {
+    await batchUpdatePrice(selectedIds.value, {
+      mode: priceMode.value,
+      action: priceAction.value,
+      value: priceValue.value,
+    })
+    ElMessage.success('价格修改成功')
+    priceDialogVisible.value = false
+    loadData()
+  } catch (e: any) {
+    ElMessage.error('修改失败')
+  } finally {
+    priceSubmitting.value = false
   }
 }
 </script>

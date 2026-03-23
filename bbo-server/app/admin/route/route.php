@@ -121,6 +121,7 @@ Route::group('', function () {
     Route::post('goods/batch/delete', Goods::class . '@batchDelete');
     Route::post('goods/batch/set-hot', Goods::class . '@batchSetHot');
     Route::post('goods/batch/set-recommend', Goods::class . '@batchSetRecommend');
+    Route::post('goods/batch/update-price', Goods::class . '@batchUpdatePrice');
     Route::post('goods/export', Goods::class . '@exportData');
     Route::get('goods/export/progress', Goods::class . '@exportProgress');
     Route::get('goods/export/download', Goods::class . '@exportDownload');

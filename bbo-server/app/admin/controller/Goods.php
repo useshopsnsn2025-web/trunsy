@@ -691,6 +691,53 @@ class Goods extends Base
     }
 
     /**
+     * 批量修改价格
+     * @return Response
+     */
+    public function batchUpdatePrice(): Response
+    {
+        $ids = input('post.ids', []);
+        $mode = input('post.mode', 'fixed');     // fixed: 固定金额, percent: 百分比
+        $action = input('post.action', 'add');   // add: 加价, reduce: 减价
+        $value = floatval(input('post.value', 0));
+
+        if (empty($ids) || !is_array($ids)) {
+            return $this->error('Please select goods');
+        }
+
+        if ($value <= 0) {
+            return $this->error('Adjustment value must be greater than 0');
+        }
+
+        $updated = 0;
+        foreach ($ids as $id) {
+            $goods = GoodsModel::find((int)$id);
+            if (!$goods) continue;
+
+            $oldPrice = (float) $goods->price;
+
+            if ($mode === 'percent') {
+                // 百分比调整
+                $adjustment = round($oldPrice * $value / 100, 2);
+            } else {
+                // 固定金额调整
+                $adjustment = $value;
+            }
+
+            $newPrice = $action === 'add'
+                ? round($oldPrice + $adjustment, 2)
+                : round($oldPrice - $adjustment, 2);
+
+            // 价格不能低于 0
+            $goods->price = max(0.01, $newPrice);
+            $goods->save();
+            $updated++;
+        }
+
+        return $this->success(['updated' => $updated], "Updated {$updated} goods");
+    }
+
+    /**
      * 获取用户列表（用于选择发布者）
      * @return Response
      */

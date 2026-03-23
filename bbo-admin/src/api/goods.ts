@@ -170,6 +170,11 @@ export function batchSetRecommendGoods(ids: number[], isRecommend: number) {
   return request.post('/goods/batch/set-recommend', { ids, is_recommend: isRecommend })
 }
 
+// 批量修改价格
+export function batchUpdatePrice(ids: number[], data: { mode: string; action: string; value: number }) {
+  return request.post('/goods/batch/update-price', { ids, ...data })
+}
+
 // 切换单个商品热门状态
 export function toggleHotGoods(id: number) {
   return request.post(`/goods/${id}/toggle-hot`)
