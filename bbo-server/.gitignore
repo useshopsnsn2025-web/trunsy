@@ -1,0 +1,18 @@
+/.idea
+/.vscode
+/vendor
+/runtime
+/public/storage
+*.log
+.env
+nul
+
+# Temp SQL and PHP scripts in root
+/*.sql
+/clear_cache.php
+/crawl_worker.php
+/create_icons.php
+/create_storage.php
+/fix_*.php
+/migrate_*.php
+/run_sql.php

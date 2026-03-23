@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+bbo-app/dist/
+bbo-app/unpackage/dist/
+bbo-admin/dist/
+
+# Environment & secrets
+.env
+bbo-server/.env
+
+# Runtime & cache
+bbo-server/runtime/
+bbo-server/public/storage/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Temp files
+*.tmp
+*.bak
+
+# APK builds
+*.apk
+
+# Export temp files
+bbo-server/runtime/export/
+
+# Audit reports
+PRODUCTION_AUDIT_REPORT.md
+
+# GMC data
+GMC-*/
+
+# Claude memory
+.claude/
+
+# Windows reserved files
+nul
+
+# Misc
+*.rar
+*.sql
+HOME.jpg
+declarative-floating-cerf.md
+数据库备份/

@@ -1,0 +1,796 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "TURNSY",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/category/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Categories",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/sell/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Sell",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/category/brands",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Brands",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/brand/models",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Brand",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/publish/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Publish",
+				"bounce": "none",
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
+			}
+		},
+		{
+			"path": "pages/message/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Messages",
+				"disableScroll": true,
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Profile",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/ocbc/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "OCBC Business",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/bri/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "BRI Business",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/mybca/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "myBCA",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/gopay/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "GoPay",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/mpay/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Mpay",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/bankofchina/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Bank of China",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/taifungbank/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Tai Fung Bank",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/ovo/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "OVO",
+				"bounce": "none"
+			}
+		},{
+			"path": "pages/wondr/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Wondr",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/goods/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Details",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/goods/list",
+			"style": {
+				"navigationBarTitleText": "Products",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/goods/model-goods",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Model Products",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/search/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Search",
+				"bounce": "none",
+				"disableScroll": true,
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
+			}
+		},
+		{
+			"path": "pages/auth/login",
+			"style": {
+				"navigationBarTitleText": "Login",
+				"navigationStyle": "custom",
+				"disableScroll": true,
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/auth/register",
+			"style": {
+				"navigationBarTitleText": "Register",
+				"navigationStyle": "custom",
+				"disableScroll": true,
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/auth/forgot-password",
+			"style": {
+				"navigationBarTitleText": "Reset Password",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/chat/index",
+			"style": {
+				"navigationBarTitleText": "Chat",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"softinputNavBar": "none",
+					"softinputMode": "adjustResize",
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/credit/index",
+			"style": {
+				"navigationBarTitleText": "Credit",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/credit/apply",
+			"style": {
+				"navigationBarTitleText": "Apply Credit",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/credit/orders",
+			"style": {
+				"navigationBarTitleText": "Installment Orders",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/credit/order-detail",
+			"style": {
+				"navigationBarTitleText": "Order Detail",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/credit/supplement",
+			"style": {
+				"navigationBarTitleText": "Supplement Documents",
+				"navigationStyle": "custom",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/support/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Help Center",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/support/category",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Category",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/support/create",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Create Ticket",
+				"bounce": "none",
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
+			}
+		},
+		{
+			"path": "pages/ticket/index",
+			"style": {
+				"navigationBarTitleText": "My Tickets",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/help/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Help",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/ticket/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Ticket Detail",
+				"app-plus": {
+					"softinputNavBar": "none",
+					"softinputMode": "adjustResize",
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/cart/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Shopping Cart",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/favorites/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Favorites",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/promotion/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Promotions",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/promotion/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Promotion",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/coupon/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Coupons",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/address/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Addresses",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/address/edit",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Edit Address",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/checkout",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Checkout",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/payment-success",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Payment Success",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Order Detail",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/payment/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Payment",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/payment/add-card",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Add Card",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/payment/edit-card",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Edit Card",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/history/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Recently Viewed",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/notification/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Notifications",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/list",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "My Orders",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/return-request",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Request Return",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/order/return-detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Return Detail",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/listings/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "My Listings",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/profile/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Profile",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/profile/edit",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Edit Profile",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/profile/account",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Account Settings",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/profile/change-email",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Change Email",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/profile/change-phone",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Change Phone",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/user/charity/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Charity",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/seller/orders/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Selling Overview",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/seller/orders/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Order Detail",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/seller/returns/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Return Requests",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/seller/returns/detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Return Detail",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/wallet/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Wallet",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/wallet/withdraw",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Withdraw",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/wallet/transactions",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Transactions",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/wallet/withdrawals",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Withdrawals",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/wallet/withdrawalMethods",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Withdrawal Methods",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Settings",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/legal",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Legal",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/legal-detail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Legal",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/login-security",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Login & Security",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/push-notifications",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Push Notifications",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/email-settings",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Email Settings",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/analytics",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Metrics & Analytics",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/theme",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Theme",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/translation",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Language",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/privacy-choices",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Privacy Choices",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/ad-preferences",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Ad Preferences",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/settings/accessibility",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Accessibility",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/guide/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "User Guide",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/guide/article",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Article",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/guide/category",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Category",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/guide/search",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Search",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/about/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "About Us",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/game/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Game Center",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/game/prizes",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "My Prizes",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/game/points",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Points History",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/share/landing",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Invitation",
+				"bounce": "none"
+			}
+		},
+		{
+			"path": "pages/share/download",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "Download TURNSY",
+				"bounce": "none"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "TURNSY",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F5F5F5",
+		"app-plus": {
+			"scrollIndicator": "none"
+		}
+	},
+	"tabBar": {
+		"custom": true,
+		"color": "#999999",
+		"selectedColor": "#FF6B35",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "Home"
+			},
+			{
+				"pagePath": "pages/category/index",
+				"text": "Category"
+			},
+			{
+				"pagePath": "pages/sell/index",
+				"text": "Sell"
+			},
+			{
+				"pagePath": "pages/message/index",
+				"text": "Message"
+			},
+			{
+				"pagePath": "pages/profile/index",
+				"text": "Profile"
+			}
+		]
+	}
+}

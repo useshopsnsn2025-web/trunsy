@@ -1,0 +1,9 @@
+{
+  "title": "Favorites",
+  "empty": "No favorites yet",
+  "emptyDesc": "Items you save will appear here",
+  "explore": "Start Exploring",
+  "removeTitle": "Remove from Favorites",
+  "removeConfirm": "Are you sure you want to remove this item?",
+  "removed": "Removed from favorites"
+}

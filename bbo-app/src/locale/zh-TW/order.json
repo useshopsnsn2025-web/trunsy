@@ -1,0 +1,28 @@
+{
+  "title": "訂單",
+  "list": "訂單列表",
+  "detail": "訂單詳情",
+  "status": {
+    "pending": "待付款",
+    "paid": "已付款",
+    "shipped": "已發貨",
+    "completed": "已完成",
+    "cancelled": "已取消",
+    "refunding": "退款中",
+    "refunded": "已退款"
+  },
+  "action": {
+    "pay": "付款",
+    "cancel": "取消訂單",
+    "confirm": "確認收貨",
+    "refund": "申請退款",
+    "review": "評價"
+  },
+  "info": {
+    "orderNo": "訂單編號",
+    "createTime": "下單時間",
+    "payTime": "付款時間",
+    "shipTime": "發貨時間",
+    "completeTime": "完成時間"
+  }
+}

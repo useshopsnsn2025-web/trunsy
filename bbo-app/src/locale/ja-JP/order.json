@@ -1,0 +1,77 @@
+{
+  "title": "注文",
+  "list": "注文一覧",
+  "detail": "注文詳細",
+  "create": "注文作成",
+  "confirm": "注文確認",
+  "status": {
+    "all": "すべて",
+    "pendingPayment": "支払い待ち",
+    "pendingShipment": "発送待ち",
+    "shipped": "発送済み",
+    "completed": "完了",
+    "cancelled": "キャンセル",
+    "refunding": "返金処理中",
+    "refunded": "返金済み"
+  },
+  "fields": {
+    "orderNo": "注文番号",
+    "goods": "商品",
+    "quantity": "数量",
+    "price": "価格",
+    "amount": "小計",
+    "shippingFee": "送料",
+    "discount": "割引",
+    "total": "合計",
+    "address": "配送先住所",
+    "remark": "備考",
+    "remarkPlaceholder": "出品者へのメッセージ（任意）",
+    "payment": "支払い方法",
+    "createTime": "注文日時",
+    "payTime": "支払い日時",
+    "shipTime": "発送日時",
+    "receiveTime": "受取日時"
+  },
+  "action": {
+    "pay": "今すぐ支払う",
+    "cancel": "注文キャンセル",
+    "remind": "発送を催促",
+    "track": "配送状況を確認",
+    "confirm": "受取確認",
+    "review": "レビューを書く",
+    "buyAgain": "もう一度購入",
+    "refund": "返金を依頼",
+    "contact": "出品者に連絡"
+  },
+  "payment": {
+    "title": "支払い方法を選択",
+    "paypal": "PayPal",
+    "stripe": "クレジット/デビットカード",
+    "paySuccess": "支払いが完了しました",
+    "payFailed": "支払いに失敗しました",
+    "payCancel": "支払いがキャンセルされました"
+  },
+  "shipping": {
+    "title": "配送情報",
+    "company": "配送業者",
+    "trackingNo": "追跡番号",
+    "status": "ステータス",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+  "review": {
+    "title": "注文のレビュー",
+    "rating": "評価",
+    "content": "レビュー",
+    "contentPlaceholder": "購入体験を共有してください",
+    "images": "写真を追加",
+    "anonymous": "匿名で投稿",
+    "submit": "レビューを送信"
+  },
+  "tips": {
+    "payTimeout": "[TIME]以内にお支払いください。期限を過ぎると注文はキャンセルされます",
+    "autoReceive": "[DAYS]日後に自動的に受取確認されます",
+    "cancelConfirm": "この注文をキャンセルしてもよろしいですか？",
+    "receiveConfirm": "商品を受け取りましたか？"
+  }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SMS Verification Sent</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter for a clean sans-serif look similar to the reference -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            gray: {
+              800: '#1F2937', // Dark text color
+              600: '#4B5563', // Description text color
+              200: '#E5E7EB', // Divider color
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for specific layout tweaks -->
+<style data-purpose="layout">
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Ensure the main container takes up full height for vertical centering alignment */
+    .viewport-height {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white text-gray-800 font-sans">
+<!-- BEGIN: Main Container -->
+<div class="viewport-height max-w-md mx-auto relative px-6 pt-6 pb-10" data-purpose="mobile-screen-wrapper">
+<!-- BEGIN: Header -->
+<header class="w-full mb-8" data-purpose="navigation-header">
+<button aria-label="Go back" class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300" type="button">
+<!-- SVG Back Arrow Icon -->
+<svg class="w-7 h-7 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</header>
+<!-- END: Header -->
+<!-- BEGIN: Main Content -->
+<!-- This section contains the illustration and the primary notification text -->
+<main class="flex-grow flex flex-col items-center justify-start mt-4" data-purpose="verification-message">
+<!-- Illustration -->
+<div class="mb-8 w-full flex justify-center" data-purpose="illustration-container">
+<!-- Using the user-specified placeholder image -->
+<img alt="Illustration of a young man with a smartphone and a message bubble" class="object-contain" id="main_illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB47GwmQYBSgAag3zP2NAL-ae2ULDqMDsFwDHocUc3fwpplOtrymft1pacnwhIzlkApgiQ6GRYNFz09vgFGIQ60FgUINhCxX2erZGkfvaYTqjY3zWlEDDRDqbFbVeFQkTa2bo0IvrzEUdtqOL5Hx4r1MZt0kSJJNEyq99OSaIMllQxYTb1A9swTJs7t7bwoUXeoLPFPZ6M_ZxLzwOOcF_HDhLo3ythWvUm1vZ0pE7kieqVxoZ_D_14qvlbHZ-Ah1z43NeRiGgEBh4I" style="width: 80%; max-width: 300px; height: auto; margin-bottom: 30px;"/>
+</div>
+<!-- Text Content -->
+<div class="text-center space-y-3 px-2">
+<h1 class="text-[20px] font-bold text-gray-900 leading-tight mb-4">
+          SMS Verifikasi telah Terkirim
+        </h1>
+<p class="text-base text-[#666666] leading-relaxed text-center">
+          Klik link verifikasi yang telah kami kirim via SMS ke nomor 0877********
+        </p>
+</div>
+</main>
+<!-- END: Main Content -->
+<!-- BEGIN: Footer Area -->
+<!-- Contains the divider and the resend countdown/action -->
+<footer class="mt-8" data-purpose="action-footer">
+<!-- Divider Line -->
+<div class="w-full border-t border-[#E0E0E0] my-[20px]" data-purpose="divider"></div>
+<!-- Resend Text -->
+<div class="text-center pt-2"><p class="text-sm text-gray-600 text-center">
+          Belum dapet link? <span class="text-gray-900 font-medium">Kirim ulang dalam 30 detik.</span>
+</p></div>
+</footer>
+<!-- END: Footer Area -->
+</div>
+<!-- END: Main Container -->
+</body></html>

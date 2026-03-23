@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security Code Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#5A45FF",
+                        "background-light": "#F3F4F6",
+                        "background-dark": "#111827",
+                        "gradient-start": "#4F46E5",
+                        "gradient-end": "#7C3AED",
+                        "bottom-bar": "#93C5FD",
+                        "bottom-text": "#1E3A8A"
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex justify-center">
+<div class="w-full max-w-[400px] min-h-screen relative flex flex-col overflow-hidden shadow-2xl gradient-bg text-white">
+<div class="flex-1 flex flex-col items-center pt-24 px-8 z-10">
+<h1 class="text-xl font-semibold mb-12 text-center">Masukkan Security Code Anda</h1>
+<div class="flex space-x-4 mb-16">
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+<div class="w-4 h-4 rounded-full border-2 border-white/80"></div>
+</div>
+<button class="text-sm font-medium mb-16 hover:text-white/80 transition-colors">
+                Lupa Security Code
+            </button>
+<div class="grid grid-cols-3 gap-y-10 gap-x-16 w-full max-w-[280px] mb-auto">
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">1</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">2</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">3</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">4</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">5</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">6</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">7</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">8</button>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">9</button>
+<div></div>
+<button class="text-3xl font-semibold flex items-center justify-center active:bg-white/10 rounded-full w-16 h-16 mx-auto transition-colors">0</button>
+<button class="flex items-center justify-center w-16 h-16 mx-auto">
+<div class="bg-white text-gradient-end rounded-md p-2 flex items-center justify-center active:bg-gray-200 transition-colors">
+<span class="material-icons text-xl">backspace</span>
+</div>
+</button>
+</div>
+</div>
+<button class="w-full bg-[#82D4F6] py-6 text-center text-[#1E5F8A] font-semibold text-[15px] z-10 hover:bg-[#6BC6F0] transition-colors mt-8">
+            Pindah ke Akun Lain
+        </button>
+<div class="absolute inset-0 overflow-hidden pointer-events-none opacity-50 mix-blend-overlay">
+<div class="absolute top-[-10%] left-[-20%] w-[140%] h-[140%] rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-600/30 blur-3xl"></div>
+<div class="absolute bottom-[-10%] right-[-20%] w-[120%] h-[120%] rounded-full bg-gradient-to-tl from-blue-500/20 to-indigo-600/20 blur-3xl"></div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡迎加入 {platform_name}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft JhengHei', 'PingFang TC', sans-serif;">
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff;">
+        <tr>
+            <td align="center">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; background-color: #ffffff;">
+
+                    <!-- Logo Header -->
+                    <tr>
+                        <td style="padding: 20px 24px;">
+                            <a href="{platform_url}">
+                                <img src="{template_logo}" alt="{platform_name}" height="32" style="height: 32px; border: 0;" />
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Hero Banner Image -->
+                    <tr>
+                        <td style="padding: 0;">
+                            <a href="{platform_url}" style="display: block;">
+                                <img src="{template_banner}" alt="歡迎" width="600" style="width: 100%; max-width: 600px; height: auto; display: block; border: 0;" />
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Welcome Section -->
+                    <tr>
+                        <td style="padding: 32px 24px 24px 24px;">
+                            <h1 style="margin: 0 0 16px 0; font-size: 28px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                歡迎，{nickname}
+                            </h1>
+                            <p style="margin: 0; font-size: 16px; color: #191919; line-height: 1.6;">
+                                我們非常高興您加入我們這個充滿熱情、樂於買賣心儀商品的全球社區。深入了解如何充分利用 {platform_name}，或更新您的用戶名 {email}。
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Coupon Gift Notice (显示条件：coupon_section 变量不为空) -->
+                    {coupon_section}
+
+                    <!-- Action Buttons -->
+                    <tr>
+                        <td style="padding: 0 24px 40px 24px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="padding-right: 12px;">
+                                        <a href="{platform_url}" style="display: inline-block; padding: 12px 24px; background-color: #191919; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919;">
+                                            開始探索
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{login_url}" style="display: inline-block; padding: 12px 24px; background-color: #ffffff; color: #191919; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919;">
+                                            更新您的用戶名
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                        <td style="padding: 0 24px;">
+                            <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 0;" />
+                        </td>
+                    </tr>
+
+                    <!-- Categories Section -->
+                    <tr>
+                        <td style="padding: 40px 24px 16px 24px;">
+                            <h2 style="margin: 0 0 8px 0; font-size: 22px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                只要你能想到的，我們都有。
+                            </h2>
+                            <p style="margin: 0; font-size: 14px; color: #767676; line-height: 1.5;">
+                                搜索、找到、購買、重複。
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Category Icons -->
+                    <tr>
+                        <td style="padding: 16px 24px 40px 24px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td width="25%" align="center" valign="top" style="padding: 0 8px;">
+                                        <a href="{platform_url}/category/electronics" style="text-decoration: none; display: block;">
+                                            <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px auto; background-color: #f5f5f5;">
+                                                <img src="{category_image_1}" alt="電子產品" width="120" height="120" style="width: 120px; height: 120px; object-fit: cover; display: block;" />
+                                            </div>
+                                            <span style="font-size: 13px; color: #191919; font-weight: 400;">電子產品</span>
+                                        </a>
+                                    </td>
+                                    <td width="25%" align="center" valign="top" style="padding: 0 8px;">
+                                        <a href="{platform_url}/category/fashion" style="text-decoration: none; display: block;">
+                                            <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px auto; background-color: #f5f5f5;">
+                                                <img src="{category_image_2}" alt="時尚" width="120" height="120" style="width: 120px; height: 120px; object-fit: cover; display: block;" />
+                                            </div>
+                                            <span style="font-size: 13px; color: #191919; font-weight: 400;">時尚</span>
+                                        </a>
+                                    </td>
+                                    <td width="25%" align="center" valign="top" style="padding: 0 8px;">
+                                        <a href="{platform_url}/category/home" style="text-decoration: none; display: block;">
+                                            <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px auto; background-color: #f5f5f5;">
+                                                <img src="{category_image_3}" alt="家居與園藝" width="120" height="120" style="width: 120px; height: 120px; object-fit: cover; display: block;" />
+                                            </div>
+                                            <span style="font-size: 13px; color: #191919; font-weight: 400;">家居與園藝</span>
+                                        </a>
+                                    </td>
+                                    <td width="25%" align="center" valign="top" style="padding: 0 8px;">
+                                        <a href="{platform_url}/category/sports" style="text-decoration: none; display: block;">
+                                            <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px auto; background-color: #f5f5f5;">
+                                                <img src="{category_image_4}" alt="運動" width="120" height="120" style="width: 120px; height: 120px; object-fit: cover; display: block;" />
+                                            </div>
+                                            <span style="font-size: 13px; color: #191919; font-weight: 400;">運動</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Protection Section -->
+                    <tr>
+                        <td style="padding: 0;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td width="50%" valign="top" style="padding: 0;">
+                                        <img src="{protection_image}" alt="我們會保護你" width="300" style="width: 100%; max-width: 300px; height: auto; display: block;" />
+                                    </td>
+                                    <td width="50%" valign="middle" style="padding: 24px; background-color: #f7f7f7;">
+                                        <div style="position: relative;">
+                                            <div style="width: 48px; height: 48px; background-color: #f5af02; border-radius: 50%; display: inline-block; text-align: center; line-height: 48px; margin-bottom: 16px;">
+                                                <span style="font-size: 20px; color: #ffffff;">$</span>
+                                            </div>
+                                        </div>
+                                        <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                            我們會保護你
+                                        </h3>
+                                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #191919; line-height: 1.5;">
+                                            {platform_name} 退款保證讓您買到心儀的商品，否則退款。
+                                        </p>
+                                        <a href="{platform_url}/help/protection" style="display: inline-block; padding: 10px 20px; background-color: #ffffff; color: #191919; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919;">
+                                            了解更多
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Live Discovery Section -->
+                    <tr>
+                        <td style="padding: 0;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td width="50%" valign="middle" style="padding: 40px 24px;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                            實時尋寶遊戲
+                                        </h3>
+                                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #e53238; font-weight: 600; line-height: 1.5;">
+                                            別錯過了。
+                                        </p>
+                                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #191919; line-height: 1.5;">
+                                            所有精彩活動都在 {platform_name} 上火熱進行中。
+                                        </p>
+                                        <a href="{platform_url}/live" style="display: inline-block; padding: 10px 20px; background-color: #ffffff; color: #191919; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919;">
+                                            大賺一筆
+                                        </a>
+                                    </td>
+                                    <td width="50%" valign="top" style="padding: 0;">
+                                        <img src="{live_image}" alt="實時發現" width="300" style="width: 100%; max-width: 300px; height: auto; display: block;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Two Columns Section -->
+                    <tr>
+                        <td style="padding: 0;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td width="50%" valign="top" style="padding: 24px; border-right: 1px solid #e5e5e5;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                            隨時隨地瀏覽、購買或出售
+                                        </h3>
+                                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #191919; line-height: 1.5;">
+                                            不錯過任何您喜愛的商品的折扣、優惠或通知。
+                                        </p>
+                                        <a href="{platform_url}/app" style="display: inline-block; padding: 10px 20px; background-color: #ffffff; color: #191919; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919; margin-bottom: 20px;">
+                                            下載該應用
+                                        </a>
+                                        <div style="margin-top: 20px;">
+                                            <img src="{app_qr_code}" alt="下載 App 二維碼" width="120" height="120" style="width: 120px; height: 120px; border: 0;" />
+                                        </div>
+                                    </td>
+                                    <td width="50%" valign="top" style="padding: 24px;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 400; color: #191919; line-height: 1.3;">
+                                            在 {platform_name} 上銷售商品賺錢
+                                        </h3>
+                                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #191919; line-height: 1.5;">
+                                            將過去的購物所得變現，用於下次購物——把它們放到 {platform_name} 上出售。
+                                        </p>
+                                        <a href="{platform_url}/sell" style="display: inline-block; padding: 10px 20px; background-color: #ffffff; color: #191919; text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 24px; border: 2px solid #191919; margin-bottom: 20px;">
+                                            開始銷售
+                                        </a>
+                                        <div style="margin-top: 20px;">
+                                            <img src="{sell_image}" alt="在平台上銷售" width="250" style="width: 100%; max-width: 250px; height: auto; border: 0;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Feedback Section -->
+                    <tr>
+                        <td style="padding: 32px 24px; border-top: 1px solid #e5e5e5;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td>
+                                        <span style="font-size: 14px; color: #191919;">這封郵件對您有幫助嗎？</span>
+                                        <a href="{platform_url}/feedback?helpful=yes" style="margin-left: 12px; text-decoration: none;">
+                                            <span style="display: inline-block; width: 24px; height: 24px; background-color: #86b817; border-radius: 50%; text-align: center; line-height: 24px; color: #ffffff; font-size: 14px;">✓</span>
+                                        </a>
+                                        <a href="{platform_url}/feedback?helpful=no" style="margin-left: 8px; text-decoration: none;">
+                                            <span style="display: inline-block; width: 24px; height: 24px; background-color: #e53238; border-radius: 50%; text-align: center; line-height: 24px; color: #ffffff; font-size: 14px;">✕</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 32px 24px; background-color: #f7f7f7; border-top: 1px solid #e5e5e5;">
+                            <!-- Logo and Social -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+                                <tr>
+                                    <td>
+                                        <a href="{platform_url}">
+                                            <img src="{template_logo}" alt="{platform_name}" height="28" style="height: 28px; border: 0;" />
+                                        </a>
+                                    </td>
+                                    <td align="right">
+                                        <a href="#" style="display: inline-block; margin-left: 16px; text-decoration: none;">
+                                            <img src="https://cdn-icons-png.flaticon.com/24/2111/2111463.png" alt="Instagram" width="20" height="20" style="border: 0;" />
+                                        </a>
+                                        <a href="#" style="display: inline-block; margin-left: 16px; text-decoration: none;">
+                                            <img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook" width="20" height="20" style="border: 0;" />
+                                        </a>
+                                        <a href="#" style="display: inline-block; margin-left: 16px; text-decoration: none;">
+                                            <img src="https://cdn-icons-png.flaticon.com/24/733/733579.png" alt="Twitter" width="20" height="20" style="border: 0;" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- App Store Badges -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding-right: 8px;">
+                                        <a href="#" style="display: inline-block;">
+                                            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="在 App Store 下載" height="36" style="height: 36px; border: 0;" />
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" style="display: inline-block;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="在 Google Play 下載" height="36" style="height: 36px; border: 0;" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Footer Links -->
+                            <p style="margin: 0 0 8px 0; font-size: 12px; color: #767676; line-height: 1.6;">
+                                更新您的<a href="{platform_url}/settings/notifications" style="color: #0654ba; text-decoration: underline;">電子郵件偏好設置</a>、<a href="{platform_url}/settings" style="color: #0654ba; text-decoration: underline;">取消訂閱</a>或了解我們的<a href="{platform_url}/privacy" style="color: #0654ba; text-decoration: underline;">隱私政策</a>。
+                            </p>
+                            <p style="margin: 0 0 8px 0; font-size: 12px; color: #767676; line-height: 1.6;">
+                                如有任何疑問，<a href="{platform_url}/contact" style="color: #0654ba; text-decoration: underline;">請聯繫我們</a>。
+                            </p>
+                            <p style="margin: 0 0 16px 0; font-size: 12px; color: #767676; line-height: 1.6;">
+                                <strong>{platform_name}</strong>
+                            </p>
+                            <p style="margin: 0; font-size: 11px; color: #767676; line-height: 1.6;">
+                                &copy; 1995-{current_year} {platform_name} 或其關聯公司
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

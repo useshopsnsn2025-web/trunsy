@@ -1,0 +1,77 @@
+{
+  "title": "Pesanan",
+  "list": "Daftar Pesanan",
+  "detail": "Detail Pesanan",
+  "create": "Buat Pesanan",
+  "confirm": "Konfirmasi Pesanan",
+  "status": {
+    "all": "Semua",
+    "pendingPayment": "Menunggu Bayar",
+    "pendingShipment": "Menunggu Kirim",
+    "shipped": "Dikirim",
+    "completed": "Selesai",
+    "cancelled": "Dibatalkan",
+    "refunding": "Proses Refund",
+    "refunded": "Direfund"
+  },
+  "fields": {
+    "orderNo": "No. Pesanan",
+    "goods": "Barang",
+    "quantity": "Jumlah",
+    "price": "Harga",
+    "amount": "Subtotal",
+    "shippingFee": "Ongkos Kirim",
+    "discount": "Diskon",
+    "total": "Total",
+    "address": "Alamat Pengiriman",
+    "remark": "Catatan",
+    "remarkPlaceholder": "Opsional: Tinggalkan pesan untuk penjual",
+    "payment": "Metode Pembayaran",
+    "createTime": "Waktu Pesanan",
+    "payTime": "Waktu Pembayaran",
+    "shipTime": "Waktu Pengiriman",
+    "receiveTime": "Waktu Penerimaan"
+  },
+  "action": {
+    "pay": "Bayar Sekarang",
+    "cancel": "Batalkan Pesanan",
+    "remind": "Ingatkan Pengiriman",
+    "track": "Lacak Paket",
+    "confirm": "Konfirmasi Penerimaan",
+    "review": "Beri Ulasan",
+    "buyAgain": "Beli Lagi",
+    "refund": "Ajukan Refund",
+    "contact": "Hubungi Penjual"
+  },
+  "payment": {
+    "title": "Pilih Pembayaran",
+    "paypal": "PayPal",
+    "stripe": "Kartu Kredit/Debit",
+    "paySuccess": "Pembayaran Berhasil",
+    "payFailed": "Pembayaran Gagal",
+    "payCancel": "Pembayaran Dibatalkan"
+  },
+  "shipping": {
+    "title": "Info Pengiriman",
+    "company": "Kurir",
+    "trackingNo": "No. Resi",
+    "status": "Status",
+    "copy": "Salin",
+    "copied": "Disalin"
+  },
+  "review": {
+    "title": "Ulasan Pesanan",
+    "rating": "Penilaian",
+    "content": "Ulasan",
+    "contentPlaceholder": "Bagikan pengalaman Anda",
+    "images": "Tambah Foto",
+    "anonymous": "Kirim secara anonim",
+    "submit": "Kirim Ulasan"
+  },
+  "tips": {
+    "payTimeout": "Silakan bayar dalam [TIME] atau pesanan akan dibatalkan",
+    "autoReceive": "Konfirmasi otomatis dalam [DAYS] hari",
+    "cancelConfirm": "Apakah Anda yakin ingin membatalkan pesanan ini?",
+    "receiveConfirm": "Konfirmasi bahwa Anda telah menerima barang?"
+  }
+}

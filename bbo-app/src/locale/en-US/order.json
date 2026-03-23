@@ -1,0 +1,77 @@
+{
+  "title": "Orders",
+  "list": "Order List",
+  "detail": "Order Details",
+  "create": "Create Order",
+  "confirm": "Confirm Order",
+  "status": {
+    "all": "All",
+    "pendingPayment": "To Pay",
+    "pendingShipment": "To Ship",
+    "shipped": "Shipped",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "refunding": "Refunding",
+    "refunded": "Refunded"
+  },
+  "fields": {
+    "orderNo": "Order No.",
+    "goods": "Item",
+    "quantity": "Qty",
+    "price": "Price",
+    "amount": "Subtotal",
+    "shippingFee": "Shipping",
+    "discount": "Discount",
+    "total": "Total",
+    "address": "Shipping Address",
+    "remark": "Note",
+    "remarkPlaceholder": "Optional: Leave a message for seller",
+    "payment": "Payment Method",
+    "createTime": "Order Time",
+    "payTime": "Payment Time",
+    "shipTime": "Ship Time",
+    "receiveTime": "Receive Time"
+  },
+  "action": {
+    "pay": "Pay Now",
+    "cancel": "Cancel Order",
+    "remind": "Remind to Ship",
+    "track": "Track Package",
+    "confirm": "Confirm Receipt",
+    "review": "Leave Review",
+    "buyAgain": "Buy Again",
+    "refund": "Request Refund",
+    "contact": "Contact Seller"
+  },
+  "payment": {
+    "title": "Select Payment",
+    "paypal": "PayPal",
+    "stripe": "Credit/Debit Card",
+    "paySuccess": "Payment Successful",
+    "payFailed": "Payment Failed",
+    "payCancel": "Payment Cancelled"
+  },
+  "shipping": {
+    "title": "Tracking Info",
+    "company": "Carrier",
+    "trackingNo": "Tracking No.",
+    "status": "Status",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "review": {
+    "title": "Review Order",
+    "rating": "Rating",
+    "content": "Review",
+    "contentPlaceholder": "Share your experience",
+    "images": "Add Photos",
+    "anonymous": "Post anonymously",
+    "submit": "Submit Review"
+  },
+  "tips": {
+    "payTimeout": "Please pay within [TIME] or order will be cancelled",
+    "autoReceive": "Auto-confirm in [DAYS] days",
+    "cancelConfirm": "Are you sure to cancel this order?",
+    "receiveConfirm": "Confirm you received the item?"
+  }
+}
