@@ -990,7 +990,7 @@ class Goods extends Base
                 $num = $imgIndex + 1;
                 try {
                     $ctx = stream_context_create([
-                        'http' => ['timeout' => 15],
+                        'http' => ['timeout' => 5],
                         'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
                     ]);
                     $imageContent = @file_get_contents($imageUrl, false, $ctx);
