@@ -619,7 +619,7 @@ class NotificationService
         // 平台信息 - 从数据库配置读取
         $variables['platform_name'] = SystemConfig::getConfig('site_name', 'TURNSY');
         $variables['platform_url'] = SystemConfig::getConfig('site_url', env('APP_URL', ''));
-        $variables['platform_logo'] = SystemConfig::getConfig('site_logo', '');
+        $variables['platform_logo'] = \app\common\helper\UrlHelper::getFullUrl(SystemConfig::getConfig('site_logo', ''));
         $variables['current_year'] = date('Y');
 
         // 模板图片配置 - 从 email_templates 表获取
