@@ -1373,9 +1373,16 @@ async function loadRecommendations() {
 // 根据用户地区获取发货地显示名称（多语言）
 function getLocationByRegion(): string {
   const region = appStore.region || 'US'
-  const validRegions = ['US', 'UK', 'AU', 'CA', 'TW', 'HK', 'MO', 'JP']
-  const key = validRegions.includes(region) ? region : 'US'
-  return t(`goods.regions.${key}`)
+  // 尝试获取用户地区的翻译
+  const translated = t(`goods.regions.${region}`)
+  if (translated !== `goods.regions.${region}`) {
+    return translated
+  }
+  // 没有翻译时回退到商品的实际发货地
+  if (goods.value?.locationCity && goods.value?.locationCountry) {
+    return `${goods.value.locationCity}, ${goods.value.locationCountry}`
+  }
+  return t('goods.regions.US')
 }
 
 // 根据商品类型和库存显示库存信息

@@ -141,7 +141,7 @@ class GoodsCrawl extends Base
 
         // 启动后台 PHP 进程处理任务
         $isWindows = DIRECTORY_SEPARATOR === '\\';
-        $phpBin = $isWindows ? str_replace('/', '\\', PHP_BINARY ?: 'php') : (PHP_BINARY ?: 'php');
+        $phpBin = $isWindows ? str_replace('/', '\\', PHP_BINARY ?: 'php') : (PHP_BINARY ?: '/www/server/php/80/bin/php');
         $script = $isWindows ? str_replace('/', '\\', app()->getRootPath() . 'crawl_worker.php') : app()->getRootPath() . 'crawl_worker.php';
         $logFile = $isWindows ? str_replace('/', '\\', $taskDir . $taskId . '_log.txt') : $taskDir . $taskId . '_log.txt';
 

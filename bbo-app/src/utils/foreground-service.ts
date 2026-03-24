@@ -8,6 +8,57 @@
 let isServiceRunning = false
 
 /**
+ * 获取前台服务通知的多语言内容
+ * 根据安卓系统语言自动匹配
+ */
+function getNotificationContent(): { title: string; content: string } {
+  const systemInfo = uni.getSystemInfoSync()
+  const lang = (systemInfo.language || 'en').toLowerCase()
+
+  const i18n: Record<string, string> = {
+    'zh': 'TURNSY 全球二手交易平台，为您提供安全可信赖的二手商品买卖服务。',
+    'ja': 'TURNSY は安全で信頼できるグローバル中古品取引プラットフォームです。',
+    'ko': 'TURNSY는 안전하고 신뢰할 수 있는 글로벌 중고 거래 플랫폼입니다.',
+    'id': 'TURNSY, platform jual beli barang bekas global yang aman dan terpercaya.',
+    'ms': 'TURNSY, platform jual beli barangan terpakai global yang selamat dan dipercayai.',
+    'th': 'TURNSY แพลตฟอร์มซื้อขายสินค้ามือสองระดับโลกที่ปลอดภัยและน่าเชื่อถือ',
+    'fr': 'TURNSY, une plateforme mondiale sûre et fiable pour l\'achat et la vente d\'occasion.',
+    'de': 'TURNSY, eine sichere und vertrauenswürdige globale Plattform für Gebrauchtwaren.',
+    'pt': 'TURNSY, uma plataforma global segura e confiável para compra e venda de usados.',
+    'es': 'TURNSY, una plataforma global segura y confiable para compra y venta de segunda mano.',
+    'it': 'TURNSY, una piattaforma globale sicura e affidabile per l\'acquisto e la vendita dell\'usato.',
+    'ru': 'TURNSY — безопасная и надёжная глобальная платформа для покупки и продажи подержанных товаров.',
+    'ar': 'TURNSY، منصة عالمية آمنة وموثوقة لبيع وشراء السلع المستعملة.',
+    'hi': 'TURNSY, पुरानी वस्तुओं की खरीद-बिक्री के लिए एक सुरक्षित और विश्वसनीय वैश्विक मंच।',
+    'vi': 'TURNSY, nền tảng mua bán đồ cũ toàn cầu an toàn và đáng tin cậy.',
+    'tr': 'TURNSY, güvenli ve güvenilir küresel ikinci el alışveriş platformu.',
+    'pl': 'TURNSY, bezpieczna i godna zaufania globalna platforma handlu używanymi przedmiotami.',
+    'nl': 'TURNSY, een veilig en betrouwbaar wereldwijd platform voor tweedehands handel.',
+    'sv': 'TURNSY, en säker och pålitlig global plattform för handel med begagnade varor.',
+    'da': 'TURNSY, en sikker og pålidelig global platform for handel med brugte varer.',
+    'fi': 'TURNSY, turvallinen ja luotettava maailmanlaajuinen käytettyjen tavaroiden kauppapaikka.',
+    'nb': 'TURNSY, en trygg og pålitelig global plattform for kjøp og salg av brukte varer.',
+    'no': 'TURNSY, en trygg og pålitelig global plattform for kjøp og salg av brukte varer.',
+    'uk': 'TURNSY — безпечна та надійна глобальна платформа для купівлі та продажу вживаних товарів.',
+    'el': 'TURNSY, μια ασφαλής και αξιόπιστη παγκόσμια πλατφόρμα αγοραπωλησίας μεταχειρισμένων.',
+    'cs': 'TURNSY, bezpečná a důvěryhodná globální platforma pro nákup a prodej použitého zboží.',
+    'ro': 'TURNSY, o platformă globală sigură și de încredere pentru cumpărarea și vânzarea de obiecte second-hand.',
+    'hu': 'TURNSY, egy biztonságos és megbízható globális platform használt cikkek adásvételéhez.',
+    'bn': 'TURNSY, পুরানো পণ্য কেনা-বেচার জন্য একটি নিরাপদ ও বিশ্বস্ত বৈশ্বিক প্ল্যাটফর্ম।',
+    'tl': 'TURNSY, isang ligtas at mapagkakatiwalaang global na platform para sa pagbili at pagbebenta ng mga second-hand na gamit.',
+    'sw': 'TURNSY, jukwaa salama na la kuaminika la biashara ya bidhaa za mkono wa pili duniani kote.',
+    'my': 'TURNSY သည် ကမ္ဘာလုံးဆိုင်ရာ ဒုတိယလက်ကုန်သွယ်မှု ပလက်ဖောင်းဖြစ်ပါသည်။',
+    'km': 'TURNSY វេទិកាពាណិជ្ជកម្មទំនិញមួយរដូវជាសកលដែលមានសុវត្ថិភាព និងអាចទុកចិត្តបាន។',
+    'en': 'TURNSY, a global secondhand trading platform, offers a safe and trustworthy service.',
+  }
+
+  for (const key of Object.keys(i18n)) {
+    if (lang.startsWith(key)) return { title: 'TURNSY', content: i18n[key] }
+  }
+  return { title: 'TURNSY', content: i18n['en'] }
+}
+
+/**
  * 获取 leven-call 插件模块
  */
 function getCallModule(): any {
@@ -41,9 +92,10 @@ export function startForegroundService(): boolean {
       return false
     }
 
+    const notification = getNotificationContent()
     module.startForeground({
-      title: 'TURNSY',
-      content: 'TURNSY is running in the background',
+      title: notification.title,
+      content: notification.content,
       icon: 'icon',
     }, (res: any) => {
       console.log('[ForegroundService] startForeground result:', JSON.stringify(res))

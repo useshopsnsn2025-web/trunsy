@@ -918,6 +918,9 @@ class Goods extends Base
         $currencyModel = \app\common\model\Currency::where('code', $currencyCode)->find();
         $decimals = $currencyModel ? (int) $currencyModel->decimals : 2;
 
+        // 汇总表格数据
+        $summaryRows = [];
+
         foreach ($ids as $index => $goodsId) {
             $goodsId = (int) $goodsId;
 
@@ -943,7 +946,9 @@ class Goods extends Base
                 mkdir($goodsDir, 0755, true);
             }
 
-            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '标题.txt', $translation->title ?: '');
+            $title = $translation->title ?: '';
+            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '标题.txt', $title);
+
             // 去除 HTML 标签，保留纯文本
             $desc = $translation->description ?: '';
             $desc = preg_replace('/<br\s*\/?>/i', "\n", $desc);
@@ -953,11 +958,21 @@ class Goods extends Base
             $desc = preg_replace("/\n{3,}/", "\n\n", trim($desc));
             file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '描述.txt', $desc);
 
+            // 价格：按目标国家汇率转换
             $price = (float) $goods->price;
-            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', number_format($price, 2, '.', ''));
+            $convertedPrice = round($price * $rate, $decimals);
+            if ($decimals === 0) {
+                file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', (string)(int)$convertedPrice);
+            } else {
+                file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', number_format($convertedPrice, $decimals, '.', ''));
+            }
 
-            $productUrl = rtrim($siteUrl, '/') . '/product.html?id=' . $goodsId;
+            // 链接：H5 端商品详情页
+            $productUrl = rtrim($siteUrl, '/') . '/#/pages/goods/detail?id=' . $goodsId;
             file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '链接.txt', $productUrl);
+
+            // 收集汇总数据
+            $summaryRows[] = [$goodsId, $title, $productUrl];
 
             $images = $goods->images;
             if (is_string($images)) {
@@ -996,6 +1011,17 @@ class Goods extends Base
                 }
             }
         }
+
+        // 生成汇总表格 CSV
+        $csvPath = $tempDir . DIRECTORY_SEPARATOR . '商品汇总.csv';
+        $fp = fopen($csvPath, 'w');
+        // 写入 BOM 头（让 Excel 正确识别 UTF-8）
+        fwrite($fp, "\xEF\xBB\xBF");
+        fputcsv($fp, ['商品ID', '商品名称', '商品链接']);
+        foreach ($summaryRows as $row) {
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
 
         // 创建 ZIP
         $zipPath = $exportDir . DIRECTORY_SEPARATOR . $taskId . '.zip';
@@ -1066,6 +1092,6 @@ class Goods extends Base
                 }
             }
         }
-        return PHP_BINARY;
+        return PHP_BINARY ?: '/www/server/php/80/bin/php';
     }
 }

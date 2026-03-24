@@ -73,6 +73,9 @@ class GoodsExport extends Command
         $currencyModel = Currency::where('code', $currencyCode)->find();
         $decimals = $currencyModel ? (int) $currencyModel->decimals : 2;
 
+        // 汇总表格数据
+        $summaryRows = [];
+
         foreach ($ids as $index => $goodsId) {
             $goodsId = (int) $goodsId;
 
@@ -119,7 +122,8 @@ class GoodsExport extends Command
             }
 
             // 标题.txt
-            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '标题.txt', $translation->title ?: '');
+            $title = $translation->title ?: '';
+            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '标题.txt', $title);
 
             // 描述.txt（去除 HTML 标签）
             $desc = $translation->description ?: '';
@@ -130,13 +134,21 @@ class GoodsExport extends Command
             $desc = preg_replace("/\n{3,}/", "\n\n", trim($desc));
             file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '描述.txt', $desc);
 
-            // 价格.txt（原始美元价格）
+            // 价格.txt（按目标国家汇率转换）
             $price = (float) $goods->price;
-            file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', number_format($price, 2, '.', ''));
+            $convertedPrice = round($price * $rate, $decimals);
+            if ($decimals === 0) {
+                file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', (string)(int)$convertedPrice);
+            } else {
+                file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '价格.txt', number_format($convertedPrice, $decimals, '.', ''));
+            }
 
-            // 链接.txt
-            $productUrl = rtrim($siteUrl, '/') . '/product.html?id=' . $goodsId;
+            // 链接.txt（H5 端商品详情页）
+            $productUrl = rtrim($siteUrl, '/') . '/#/pages/goods/detail?id=' . $goodsId;
             file_put_contents($goodsDir . DIRECTORY_SEPARATOR . '链接.txt', $productUrl);
+
+            // 收集汇总数据
+            $summaryRows[] = [$goodsId, $title, $productUrl];
 
             // Images
             $images = $goods->images;
@@ -183,6 +195,16 @@ class GoodsExport extends Command
                 }
             }
         }
+
+        // 生成汇总表格 CSV
+        $csvPath = $tempDir . DIRECTORY_SEPARATOR . '商品汇总.csv';
+        $fp = fopen($csvPath, 'w');
+        fwrite($fp, "\xEF\xBB\xBF");
+        fputcsv($fp, ['商品ID', '商品名称', '商品链接']);
+        foreach ($summaryRows as $row) {
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
 
         // Create ZIP
         $output->writeln("Creating ZIP file...");
