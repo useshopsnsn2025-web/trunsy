@@ -218,10 +218,11 @@ class EmailTemplate extends Model
         // 图片变量使用 template_ 前缀，如 template_logo, template_banner 等
         if (!empty($template['images'])) {
             foreach ($template['images'] as $key => $value) {
-                $variables['template_' . $key] = $value;
+                $fullUrl = \app\common\helper\UrlHelper::getFullUrl($value);
+                $variables['template_' . $key] = $fullUrl;
                 // 同时支持不带前缀的变量名（兼容旧模板）
                 if (!isset($variables[$key])) {
-                    $variables[$key] = $value;
+                    $variables[$key] = $fullUrl;
                 }
             }
         }
@@ -249,7 +250,7 @@ class EmailTemplate extends Model
         return [
             'platform_name' => $platformName,
             'platform_url' => $platformUrl,
-            'platform_logo' => $platformLogo,
+            'platform_logo' => \app\common\helper\UrlHelper::getFullUrl($platformLogo),
             'current_year' => date('Y'),
             'current_date' => date('Y-m-d'),
         ];
