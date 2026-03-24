@@ -364,7 +364,7 @@ class NotificationService
             }
             $variables['goods_title'] = $goodsSnapshot['title'] ?? '';
             $goodsImages = $goodsSnapshot['images'] ?? [];
-            $rawImage = $goodsSnapshot['image'] ?? (!empty($goodsImages) ? $goodsImages[0] : '');
+            $rawImage = $goodsSnapshot['cover_image'] ?? $goodsSnapshot['image'] ?? (!empty($goodsImages) ? $goodsImages[0] : '');
             $variables['goods_image'] = \app\common\helper\UrlHelper::getFullUrl($rawImage);
             $variables['quantity'] = $order['quantity'] ?? $order->quantity ?? 1;
             $variables['price'] = $this->formatAmount(
