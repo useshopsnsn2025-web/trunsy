@@ -150,16 +150,9 @@ class R2Storage
      */
     protected function uploadToR2($file, string $type, string $fileType): array
     {
-        $accountId = $this->config['account_id'];
-        $accessKeyId = $this->config['access_key_id'];
-        $secretAccessKey = $this->config['secret_access_key'];
-        $bucket = $this->config['bucket'];
-        $endpoint = $this->config['endpoint'];
         $publicUrl = $this->config['public_url'];
-
-        if (empty($accountId) || empty($accessKeyId) || empty($secretAccessKey)) {
-            throw new \Exception('R2 configuration is incomplete');
-        }
+        $workerUrl = SystemConfig::getConfig('r2_worker_url', '');
+        $workerSecret = SystemConfig::getConfig('r2_worker_secret', '');
 
         // 生成文件路径
         $date = date('Ymd');
@@ -171,8 +164,17 @@ class R2Storage
         $fileContent = file_get_contents($file->getRealPath());
         $contentType = $file->getOriginalMime();
 
-        // 使用 AWS Signature Version 4 签名
-        $result = $this->putObjectToR2($endpoint, $bucket, $key, $fileContent, $contentType, $accessKeyId, $secretAccessKey);
+        // 优先使用 Worker 代理上传（解决 S3 端点 SSL 兼容性问题）
+        if (!empty($workerUrl) && !empty($workerSecret)) {
+            $result = $this->uploadViaWorker($workerUrl, $workerSecret, $key, $fileContent, $contentType);
+        } else {
+            // 回退到 S3 签名直传
+            $endpoint = $this->config['endpoint'];
+            $bucket = $this->config['bucket'];
+            $accessKeyId = $this->config['access_key_id'];
+            $secretAccessKey = $this->config['secret_access_key'];
+            $result = $this->putObjectToR2($endpoint, $bucket, $key, $fileContent, $contentType, $accessKeyId, $secretAccessKey);
+        }
 
         if (!$result) {
             throw new \Exception('Failed to upload to R2: ' . $this->lastR2Error);
@@ -455,5 +457,69 @@ class R2Storage
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * 通过 Cloudflare Worker 代理上传到 R2
+     */
+    protected function uploadViaWorker(string $workerUrl, string $secret, string $key, string $content, string $contentType): bool
+    {
+        $url = rtrim($workerUrl, '/') . '/' . $key;
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => $content,
+            CURLOPT_HTTPHEADER => [
+                'X-Upload-Key: ' . $secret,
+                'Content-Type: ' . $contentType,
+                'Content-Length: ' . strlen($content),
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 120,
+            CURLOPT_CONNECTTIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($httpCode === 200) {
+            return true;
+        }
+
+        $this->lastR2Error = "Worker HTTP {$httpCode}: {$response} (curl: {$curlError})";
+        return false;
+    }
+
+    /**
+     * 通过 Cloudflare Worker 代理删除 R2 文件
+     */
+    protected function deleteViaWorker(string $workerUrl, string $secret, string $key): bool
+    {
+        $url = rtrim($workerUrl, '/') . '/' . $key;
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'DELETE',
+            CURLOPT_HTTPHEADER => [
+                'X-Upload-Key: ' . $secret,
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return $httpCode === 200;
     }
 }
