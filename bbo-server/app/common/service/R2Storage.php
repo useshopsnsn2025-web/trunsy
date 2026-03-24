@@ -104,6 +104,20 @@ class R2Storage
      * @return array ['url' => string, 'path' => string]
      * @throws \Exception
      */
+    public function uploadFile($file, string $type = 'common'): array
+    {
+        $maxSize = 200 * 1024 * 1024; // 200MB
+        if ($file->getSize() > $maxSize) {
+            throw new \Exception('File size exceeds ' . ($maxSize / 1024 / 1024) . 'MB limit');
+        }
+
+        if ($this->enabled) {
+            return $this->uploadToR2($file, $type, 'file');
+        }
+
+        return $this->uploadToLocal($file, $type, 'file');
+    }
+
     public function uploadVideo($file, string $type = 'common'): array
     {
         // 验证文件类型

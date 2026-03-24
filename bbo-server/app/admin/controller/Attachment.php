@@ -180,8 +180,9 @@ class Attachment extends Base
             $type = input('post.type', 'common');
             $groupId = (int)input('post.group_id', 0);
 
-            // 判断是图片还是视频
+            // 判断文件类型
             $mimeType = $file->getMime();
+            $ext = strtolower(pathinfo($file->getOriginalName(), PATHINFO_EXTENSION));
             $fileType = AttachmentModel::TYPE_FILE;
             if (strpos($mimeType, 'image/') === 0) {
                 $fileType = AttachmentModel::TYPE_IMAGE;
@@ -189,6 +190,9 @@ class Attachment extends Base
             } elseif (strpos($mimeType, 'video/') === 0) {
                 $fileType = AttachmentModel::TYPE_VIDEO;
                 $result = $this->storage->uploadVideo($file, $type);
+            } elseif (in_array($ext, ['apk', 'ipa', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'zip', 'rar'])) {
+                $fileType = AttachmentModel::TYPE_FILE;
+                $result = $this->storage->uploadFile($file, $type);
             } else {
                 return $this->error('不支持的文件类型');
             }
