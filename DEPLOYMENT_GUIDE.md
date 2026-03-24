@@ -476,7 +476,136 @@ Google Cloud Console → API 和服务 → 凭据 → OAuth 2.0 客户端 ID：
 
 ---
 
-## 六、验证清单
+## 六、Cloudflare R2 云存储配置
+
+R2 用于存储图片和文件，通过 Cloudflare CDN 全球加速，不占服务器带宽。
+
+### 6.1 前提条件
+
+- 域名 DNS 已托管在 Cloudflare（必须）
+- Cloudflare 账号已开通 R2（免费 10GB 存储）
+
+### 6.2 域名迁移到 Cloudflare DNS
+
+如果域名 DNS 还没有托管在 Cloudflare：
+
+1. Cloudflare Dashboard → 添加站点 → 输入域名
+2. 选择 **自动导入 DNS 记录** → 继续
+3. 选择 **Free** 套餐
+4. Cloudflare 给出两个 NS 地址，去域名注册商修改 NS 记录
+5. 等待 DNS 生效（几分钟到 24 小时），Cloudflare 会发邮件通知
+
+### 6.3 创建 R2 Bucket
+
+1. Cloudflare Dashboard → R2 → 创建存储桶
+2. 名称：`bbo-assets`（或自定义）
+3. 位置：选择离服务器最近的区域
+4. 创建后进入 Bucket → 设置 → 开启 **公共访问**（获得 `pub-xxx.r2.dev` 公共 URL）
+
+### 6.4 获取 R2 API 凭据
+
+1. Cloudflare Dashboard → R2 → 概述 → 管理 R2 API 令牌
+2. 创建 API 令牌 → 权限选择 **对象读和写**
+3. 记录 **Access Key ID** 和 **Secret Access Key**
+4. 记录 **Account ID**（在 R2 概述页面右侧）
+
+### 6.5 创建 Cloudflare Worker（上传代理）
+
+由于 R2 S3 端点的 TLS 握手可能与某些服务器不兼容，需要通过 Worker 代理上传。
+
+**创建 Worker：**
+
+1. Cloudflare Dashboard → Workers & Pages → 创建应用程序
+2. 选择 **从"Hello World"开始！** → 名称填 `r2-upload` → 部署
+3. 点 **编辑代码**，替换为以下内容：
+
+```javascript
+export default {
+  async fetch(request, env) {
+    const key = request.headers.get('X-Upload-Key')
+    if (key !== env.SECRET) return new Response('', { status: 401 })
+
+    const path = new URL(request.url).pathname.slice(1)
+    if (!path) return new Response('', { status: 400 })
+
+    if (request.method === 'PUT') {
+      await env.BUCKET.put(path, request.body, {
+        httpMetadata: { contentType: request.headers.get('Content-Type') || 'application/octet-stream' },
+      })
+      return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } })
+    }
+
+    if (request.method === 'DELETE') {
+      await env.BUCKET.delete(path)
+      return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } })
+    }
+
+    return new Response('', { status: 405 })
+  }
+}
+```
+
+4. 保存并部署
+
+**配置 Worker 绑定：**
+
+Worker → Settings：
+
+| 配置项 | 类型 | 变量名 | 值 |
+|--------|------|--------|-----|
+| R2 Bucket | R2 Bucket Binding | `BUCKET` | 选择你的 bucket |
+| 上传密钥 | Secret | `SECRET` | 用 `openssl rand -hex 32` 生成 |
+
+**配置 Worker 自定义域名：**
+
+Worker → Settings → Domains & Routes → 添加自定义域名：`upload.你的域名.com`
+
+**验证 Worker：**
+
+```bash
+curl -X PUT https://upload.你的域名.com/test.txt \
+  -H "X-Upload-Key: 你的SECRET值" \
+  -H "Content-Type: text/plain" \
+  -d "hello test"
+# 返回 {"success":true} 即成功
+```
+
+### 6.6 Admin 后台配置
+
+Admin 后台 → 系统设置 → 存储设置，配置以下项：
+
+| 配置键 | 值 | 说明 |
+|--------|-----|------|
+| `r2_enabled` | `true` | 启用 R2 |
+| `r2_account_id` | `你的Account ID` | Cloudflare 账户 ID |
+| `r2_access_key_id` | `你的Access Key ID` | R2 API 凭据 |
+| `r2_secret_access_key` | `你的Secret Access Key` | R2 API 凭据（敏感） |
+| `r2_bucket` | `bbo-assets` | Bucket 名称 |
+| `r2_endpoint` | `https://你的AccountID.r2.cloudflarestorage.com` | S3 端点（备用） |
+| `r2_public_url` | `https://pub-xxx.r2.dev` | 公共访问 URL |
+| `r2_worker_url` | `https://upload.你的域名.com` | Worker 上传代理地址 |
+| `r2_worker_secret` | `生成的随机密钥` | Worker 验证密钥 |
+
+### 6.7 验证
+
+```bash
+# 测试 Worker 上传
+curl -X PUT https://upload.你的域名.com/test.txt \
+  -H "X-Upload-Key: 你的SECRET" \
+  -H "Content-Type: text/plain" \
+  -d "test"
+
+# 测试公共访问
+curl -I https://pub-xxx.r2.dev/test.txt
+```
+
+在 Admin 后台上传一张图片，确认：
+- [ ] 上传成功（返回 R2 URL）
+- [ ] 图片可以正常访问和显示
+
+---
+
+## 七、验证清单
 
 部署完成后逐项验证：
 

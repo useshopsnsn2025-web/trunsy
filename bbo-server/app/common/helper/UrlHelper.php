@@ -149,8 +149,15 @@ class UrlHelper
         // 统一路径分隔符（Windows 兼容）
         $path = str_replace('\\', '/', $path);
 
-        // 获取当前请求的域名
-        $domain = request()->domain();
+        // 获取域名：优先使用系统配置的网站 URL，避免命令行/异步场景下 request() 返回 localhost
+        try {
+            $domain = request()->domain();
+            if (empty($domain) || str_contains($domain, 'localhost') || str_contains($domain, '127.0.0.1')) {
+                $domain = rtrim(\app\common\model\SystemConfig::getConfig('site_url', ''), '/') ?: $domain;
+            }
+        } catch (\Throwable $e) {
+            $domain = rtrim(\app\common\model\SystemConfig::getConfig('site_url', ''), '/') ?: 'https://www.turnsysg.com';
+        }
 
         // 确保路径以 / 开头
         if (!str_starts_with($path, '/')) {

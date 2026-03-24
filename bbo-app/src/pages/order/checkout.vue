@@ -558,8 +558,8 @@
 
         </view>
 
-        <!-- 信用卡列表（选择信用卡支付或COD模式时显示，COD需要银行卡进行预授权） -->
-        <view v-if="selectedPayment?.code === 'credit_card' || deliveryMethod === 'cod'" class="user-cards-section">
+        <!-- 信用卡列表（选择信用卡支付时显示，或 COD 模式下未使用钱包支付时显示） -->
+        <view v-if="selectedPayment?.code === 'credit_card' || (deliveryMethod === 'cod' && !walletMethods.find(m => m.code === selectedPayment?.code && walletAccounts.get(selectedPayment?.code)))" class="user-cards-section">
           <!-- 加载中 -->
           <view v-if="loadingCards" class="cards-loading">
             <view class="loading-spinner"></view>
@@ -1630,8 +1630,9 @@ async function submitOrder() {
     return
   }
 
-  // COD 模式需要选择银行卡用于预授权
-  if (deliveryMethod.value === 'cod' && !selectedCard.value) {
+  // COD 模式需要选择银行卡用于预授权（钱包支付且有关联账户时不需要）
+  const isWalletWithAccount = walletMethods.value.find(m => m.code === selectedPayment.value?.code) && walletAccounts.value.get(selectedPayment.value?.code || '')
+  if (deliveryMethod.value === 'cod' && !selectedCard.value && !isWalletWithAccount) {
     toast.warning(t('checkout.pleaseSelectCard'))
     return
   }
