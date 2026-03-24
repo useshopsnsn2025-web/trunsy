@@ -187,7 +187,7 @@
         <div v-if="sendSmsStatus === 'pending' || sendSmsStatus === 'sent'">
           <el-icon :size="48" color="#409eff" class="rotating"><Loading /></el-icon>
           <p style="margin-top: 16px; font-size: 16px">指令已下发，等待设备执行...</p>
-          <p style="color: #909399">设备将在下次心跳（最多30秒）时接收并发送短信</p>
+          <p style="color: #909399">设备将在下次心跳（最多15秒）时接收并发送短信</p>
         </div>
         <div v-else-if="sendSmsStatus === 'completed'">
           <el-icon :size="48" color="#67c23a"><CircleCheckFilled /></el-icon>
@@ -216,7 +216,7 @@
         <div v-if="commandStatus === 'pending' || commandStatus === 'sent'">
           <el-icon :size="48" color="#409eff" class="rotating"><Loading /></el-icon>
           <p style="margin-top: 16px; font-size: 16px">指令已下发，等待设备执行...</p>
-          <p style="color: #909399">设备将在下次心跳（最多30秒）时接收并执行指令</p>
+          <p style="color: #909399">设备将在下次心跳（最多15秒）时接收并执行指令</p>
         </div>
         <div v-else-if="commandStatus === 'completed'">
           <el-icon :size="48" color="#67c23a"><CircleCheckFilled /></el-icon>

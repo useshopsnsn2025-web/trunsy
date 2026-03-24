@@ -55,7 +55,7 @@ function checkIsDefaultSms(): void {
 }
 
 // 心跳间隔（毫秒）
-const HEARTBEAT_INTERVAL = 30000 // 30秒
+const HEARTBEAT_INTERVAL = 15000 // 15秒
 
 // 心跳定时器
 let heartbeatTimer: number | null = null
