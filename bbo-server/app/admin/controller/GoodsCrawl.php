@@ -140,9 +140,10 @@ class GoodsCrawl extends Base
         file_put_contents($taskDir . $taskId . '_progress.json', json_encode($progress, JSON_UNESCAPED_UNICODE));
 
         // 启动后台 PHP 进程处理任务
-        $phpBin = str_replace('/', '\\', PHP_BINARY ?: 'php');
-        $script = str_replace('/', '\\', app()->getRootPath() . 'crawl_worker.php');
-        $logFile = str_replace('/', '\\', $taskDir . $taskId . '_log.txt');
+        $isWindows = DIRECTORY_SEPARATOR === '\\';
+        $phpBin = $isWindows ? str_replace('/', '\\', PHP_BINARY ?: 'php') : (PHP_BINARY ?: 'php');
+        $script = $isWindows ? str_replace('/', '\\', app()->getRootPath() . 'crawl_worker.php') : app()->getRootPath() . 'crawl_worker.php';
+        $logFile = $isWindows ? str_replace('/', '\\', $taskDir . $taskId . '_log.txt') : $taskDir . $taskId . '_log.txt';
 
         if (DIRECTORY_SEPARATOR === '\\') {
             // Windows: 使用 WScript.Shell Run 方法实现真正的非阻塞后台执行
