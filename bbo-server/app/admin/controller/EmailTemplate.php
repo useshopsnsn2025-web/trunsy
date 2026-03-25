@@ -167,17 +167,35 @@ class EmailTemplate extends Base
             return $this->error('Subject and content are required');
         }
 
-        // 英文（en-us）直接更新主表
+        // 英文（en-us）更新主表 + 翻译表
         if ($locale === 'en-us') {
             $template->subject = $subject;
             $template->content = $content;
             $template->save();
 
-            // 清除缓存
+            // 同时更新或创建 translations 表中的 en-us 记录
+            $translation = EmailTemplateTranslation::where('template_id', $id)
+                ->where('locale', 'en-us')
+                ->find();
+            if ($translation) {
+                $translation->subject = $subject;
+                $translation->content = $content;
+                $translation->save();
+            } else {
+                $translation = EmailTemplateTranslation::create([
+                    'template_id' => $id,
+                    'locale' => 'en-us',
+                    'subject' => $subject,
+                    'content' => $content,
+                ]);
+            }
+
+            // 清除所有相关缓存
             EmailTemplateModel::clearCache($template->type);
+            \think\facade\Cache::delete('email_template:' . $template->type . ':en-us');
 
             return $this->success([
-                'id' => null,
+                'id' => $translation->id,
                 'template_id' => $id,
                 'locale' => $locale,
                 'subject' => $subject,
