@@ -814,26 +814,50 @@ class Goods extends Base
             'file' => '',
         ]));
 
-        // 同步执行导出（直接在当前请求中完成）
-        set_time_limit(300);
-        ignore_user_abort(true);
+        // 保存任务参数到文件
+        $paramsFile = $exportDir . DIRECTORY_SEPARATOR . $taskId . '_params.json';
+        file_put_contents($paramsFile, json_encode([
+            'task_id' => $taskId,
+            'ids' => $ids,
+            'locale' => $locale,
+            'currency_code' => $currencyCode,
+            'rate' => $rate,
+        ]));
 
-        try {
-            $this->processExportTask($taskId, $ids, $locale, $currencyCode, $rate, $progressFile, $exportDir);
-        } catch (\Throwable $e) {
-            file_put_contents($progressFile, json_encode([
-                'status' => 'failed',
-                'total' => count($ids),
-                'current' => 0,
-                'message' => '导出失败: ' . $e->getMessage(),
-                'file' => '',
-            ]));
-            return $this->error('Export failed: ' . $e->getMessage());
+        // 异步启动后台进程执行导出
+        $isWindows = DIRECTORY_SEPARATOR === '\\';
+        $phpBin = $isWindows ? str_replace('/', '\\', PHP_BINARY ?: 'php') : (PHP_BINARY ?: '/www/server/php/80/bin/php');
+        $script = app()->getRootPath() . 'think';
+        $logFile = $exportDir . DIRECTORY_SEPARATOR . $taskId . '_log.txt';
+
+        if ($isWindows) {
+            $batFile = str_replace('/', '\\', $exportDir . DIRECTORY_SEPARATOR . $taskId . '_run.bat');
+            $batContent = '@echo off' . "\r\n"
+                . '"' . str_replace('/', '\\', $phpBin) . '" "' . str_replace('/', '\\', $script) . '" goods:export "' . str_replace('/', '\\', $paramsFile) . '" > "' . str_replace('/', '\\', $logFile) . '" 2>&1' . "\r\n"
+                . 'del "%~f0"' . "\r\n";
+            file_put_contents($batFile, $batContent);
+
+            $vbsFile = str_replace('/', '\\', $exportDir . DIRECTORY_SEPARATOR . $taskId . '_run.vbs');
+            $vbsContent = 'Set WshShell = CreateObject("WScript.Shell")' . "\r\n"
+                . 'WshShell.Run """' . $batFile . '""", 0, False' . "\r\n"
+                . 'Set WshShell = Nothing' . "\r\n"
+                . 'Set fso = CreateObject("Scripting.FileSystemObject")' . "\r\n"
+                . 'fso.DeleteFile WScript.ScriptFullName' . "\r\n";
+            file_put_contents($vbsFile, $vbsContent);
+            pclose(popen('cscript //Nologo "' . $vbsFile . '"', 'r'));
+        } else {
+            $cmd = sprintf('%s %s goods:export %s > %s 2>&1 &', $phpBin, $script, escapeshellarg($paramsFile), escapeshellarg($logFile));
+            pclose(popen($cmd, 'r'));
         }
 
-        // 直接返回完成后的下载信息
-        $progress = json_decode(file_get_contents($progressFile), true);
-        return $this->success($progress);
+        return $this->success([
+            'status' => 'processing',
+            'total' => count($ids),
+            'current' => 0,
+            'message' => 'Starting export...',
+            'file' => '',
+            'task_id' => $taskId,
+        ]);
     }
 
     /**
@@ -990,11 +1014,16 @@ class Goods extends Base
                 $num = $imgIndex + 1;
                 try {
                     $ctx = stream_context_create([
-                        'http' => ['timeout' => 5],
+                        'http' => ['timeout' => 2],
                         'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
                     ]);
                     $imageContent = @file_get_contents($imageUrl, false, $ctx);
-                    if ($imageContent === false) continue;
+                    if ($imageContent === false) {
+                        $failCount = ($failCount ?? 0) + 1;
+                        if ($failCount >= 2) break; // 连续2张失败就跳过剩余图片
+                        continue;
+                    }
+                    $failCount = 0;
 
                     $ext = 'jpg';
                     $pathInfo = pathinfo(parse_url($imageUrl, PHP_URL_PATH) ?: '');
