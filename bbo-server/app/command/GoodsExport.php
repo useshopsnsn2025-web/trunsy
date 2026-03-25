@@ -59,10 +59,10 @@ class GoodsExport extends Command
     protected function processExport(string $taskId, array $ids, string $locale, string $currencyCode, float $rate, Output $output): void
     {
         $total = count($ids);
-        $progressFile = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
+        $progressFile = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
 
         // Create temp directory
-        $tempDir = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId;
+        $tempDir = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR . $taskId;
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
@@ -208,7 +208,7 @@ class GoodsExport extends Command
 
         // Create ZIP
         $output->writeln("Creating ZIP file...");
-        $zipPath = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '.zip';
+        $zipPath = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR . $taskId . '.zip';
         $zip = new \ZipArchive();
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
             file_put_contents($progressFile, json_encode([

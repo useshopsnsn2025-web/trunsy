@@ -799,7 +799,7 @@ class Goods extends Base
         // Generate task ID
         $taskId = uniqid('export_', true);
 
-        $exportDir = runtime_path() . 'export';
+        $exportDir = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export';
         if (!is_dir($exportDir)) {
             mkdir($exportDir, 0755, true);
         }
@@ -871,7 +871,7 @@ class Goods extends Base
             return $this->error('Invalid task ID');
         }
 
-        $progressFile = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
+        $progressFile = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
         clearstatcache(true, $progressFile);
         if (!file_exists($progressFile)) {
             return $this->error('Task not found');
@@ -896,7 +896,7 @@ class Goods extends Base
             return $this->error('Invalid task ID');
         }
 
-        $progressFile = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
+        $progressFile = app()->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
         clearstatcache(true, $progressFile);
         if (!file_exists($progressFile)) {
             return $this->error('Task not found');
