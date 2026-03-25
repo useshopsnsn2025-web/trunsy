@@ -243,9 +243,9 @@ class EmailTemplate extends Model
     protected static function getSystemVariables(): array
     {
         // 从系统配置获取平台信息
-        $platformName = SystemConfig::getConfig('platform_name', 'TURNSY Marketplace');
-        $platformUrl = SystemConfig::getConfig('platform_url', 'https://www.trunsysg.com');
-        $platformLogo = SystemConfig::getConfig('platform_logo', '');
+        $platformName = SystemConfig::getConfig('platform_name', SystemConfig::getConfig('site_name', 'TURNSY Marketplace'));
+        $platformUrl = SystemConfig::getConfig('platform_url', SystemConfig::getConfig('site_url', 'https://www.turnsysg.com'));
+        $platformLogo = SystemConfig::getConfig('platform_logo', SystemConfig::getConfig('site_logo', ''));
 
         return [
             'platform_name' => $platformName,
