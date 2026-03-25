@@ -872,6 +872,7 @@ class Goods extends Base
         }
 
         $progressFile = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
+        clearstatcache(true, $progressFile);
         if (!file_exists($progressFile)) {
             return $this->error('Task not found');
         }
@@ -896,6 +897,7 @@ class Goods extends Base
         }
 
         $progressFile = runtime_path() . 'export' . DIRECTORY_SEPARATOR . $taskId . '_progress.json';
+        clearstatcache(true, $progressFile);
         if (!file_exists($progressFile)) {
             return $this->error('Task not found');
         }
@@ -906,6 +908,7 @@ class Goods extends Base
         }
 
         $filePath = $progress['file'];
+        clearstatcache(true, $filePath);
         if (!file_exists($filePath)) {
             return $this->error('File not found');
         }
