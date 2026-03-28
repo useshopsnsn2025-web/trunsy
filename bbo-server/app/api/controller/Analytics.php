@@ -48,10 +48,21 @@ class Analytics extends Base
             ];
         }
 
+        // 去重：同一 session + event_type + 同一秒只记一条
+        $seen = [];
+        $uniqueRows = [];
+        foreach ($rows as $row) {
+            $key = $row['session_id'] . '|' . $row['event_type'] . '|' . $row['created_at'];
+            if (!isset($seen[$key])) {
+                $seen[$key] = true;
+                $uniqueRows[] = $row;
+            }
+        }
+
         $inserted = 0;
-        if (!empty($rows)) {
+        if (!empty($uniqueRows)) {
             try {
-                $inserted = UserEvent::batchInsert($rows);
+                $inserted = UserEvent::batchInsert($uniqueRows);
             } catch (\Throwable $e) {
                 // Silently fail - analytics should not break user experience
             }
