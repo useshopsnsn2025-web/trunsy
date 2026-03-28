@@ -134,7 +134,7 @@ class Analytics extends Base
         if (!empty($conversionData)) {
             $goodsIds = array_column($conversionData, 'goods_id');
             $goodsCollection = Goods::whereIn('id', $goodsIds)
-                ->field('id, images, price, currency, cover_image')
+                ->field('id, images, price, currency')
                 ->select();
 
             // Get translations for titles
@@ -153,13 +153,8 @@ class Analytics extends Base
                 $goods = $goodsList[$goodsId] ?? null;
                 if ($goods) {
                     $item['goods_title'] = $goods->getTranslated('title', $locale);
-                    // 优先使用 cover_image，否则取 images 第一张
-                    $coverImage = $goods->getData('cover_image') ?? '';
-                    if (empty($coverImage)) {
-                        $images = array_values((array)($goods['images'] ?? []));
-                        $coverImage = $images[0] ?? '';
-                    }
-                    $item['goods_image'] = !empty($coverImage) ? \app\common\helper\UrlHelper::getFullUrl($coverImage) : '';
+                    $images = array_values((array)($goods['images'] ?? []));
+                    $item['goods_image'] = !empty($images) ? \app\common\helper\UrlHelper::getFullUrl($images[0]) : '';
                     $item['goods_price'] = (float)($goods['price'] ?? 0);
                     $item['goods_currency'] = $goods['currency'] ?? 'SGD';
                 } else {
