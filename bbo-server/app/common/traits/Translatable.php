@@ -254,8 +254,8 @@ trait Translatable
                 if (is_array($item)) {
                     $item[$field] = $value;
                 } else {
-                    // 使用 data() 方法设置，避免 fields_strict 模式下 __set 报 property not exists
-                    $item->data([$field => $value]);
+                    // 直接设置属性，避免 data() 清空所有字段
+                    $item->$field = $value;
                 }
             }
         }
