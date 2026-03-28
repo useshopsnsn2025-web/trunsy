@@ -5,6 +5,7 @@ import { useAppStore } from "@/store/modules/app";
 import { getUnreadCount } from "@/api/chat";
 import HeartbeatService from "@/utils/heartbeat";
 import { getLocale, loadTranslationsFromServer, fetchServerDefaultLocale, setLocale, resolveLocaleReady } from "@/locale";
+import { tracker } from "@/utils/tracker";
 // #ifdef H5
 import { hasGoogleOAuthCallback, handleGoogleOAuthCallback } from "@/utils/googleAuth";
 // #endif
@@ -213,6 +214,25 @@ onLaunch(() => {
 
   // 启动心跳服务（维持在线状态）
   HeartbeatService.start();
+
+  // 全局页面追踪：拦截所有页面跳转自动上报 PV
+  const trackPage = (args: any) => {
+    const url = typeof args === 'string' ? args : args?.[0]?.url || args?.url || ''
+    if (url) {
+      const path = url.split('?')[0]
+      tracker.pageEnter(path)
+    }
+  }
+  uni.addInterceptor('navigateTo', { success: trackPage })
+  uni.addInterceptor('redirectTo', { success: trackPage })
+  uni.addInterceptor('reLaunch', { success: trackPage })
+  uni.addInterceptor('switchTab', { success: trackPage })
+
+  // 上报首页 PV
+  const pages = getCurrentPages()
+  if (pages.length > 0) {
+    tracker.pageEnter('/' + (pages[pages.length - 1].route || ''))
+  }
 
   // #ifdef APP-PLUS
   // 仅在已登录状态下启动后台服务（权限申请在 onShow 首次执行）
