@@ -79,7 +79,12 @@ class Goods extends Base
 
         $status = input('status', '');
         if ($status !== '') {
-            $query->where('status', (int) $status);
+            if ((int) $status === 3) {
+                // 已售罄：查询库存为0的商品
+                $query->where('stock', 0);
+            } else {
+                $query->where('status', (int) $status);
+            }
         }
 
         $userId = input('user_id', '');

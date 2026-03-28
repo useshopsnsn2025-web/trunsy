@@ -711,6 +711,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { convertAmount, getCurrencySymbol } from '@/utils/currency'
 import { useToast } from '@/composables/useToast'
+import { navigateToLogin } from '@/utils/request'
 import CategoryPicker from '@/components/CategoryPicker.vue'
 import NavBar from '@/components/NavBar.vue'
 import SearchableSelect from '@/components/SearchableSelect.vue'
@@ -911,7 +912,7 @@ function handleClose() {
 
 // 跳转登录
 function goLogin() {
-  uni.navigateTo({ url: '/pages/auth/login' })
+  navigateToLogin()
 }
 
 // 下一步

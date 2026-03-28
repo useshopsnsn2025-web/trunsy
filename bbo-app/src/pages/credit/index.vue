@@ -211,6 +211,7 @@ import { getCreditLimit, getInstallmentPlans, type CreditLimit, type Installment
 import { useToast } from '@/composables/useToast'
 import LoadingPage from '@/components/LoadingPage.vue'
 import NavBar from '@/components/NavBar.vue'
+import { navigateToLogin } from '@/utils/request'
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -270,7 +271,7 @@ async function loadPlans() {
 // 导航函数
 function goApply() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   uni.navigateTo({ url: '/pages/credit/apply' })
@@ -278,7 +279,7 @@ function goApply() {
 
 function goOrders() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   uni.navigateTo({ url: '/pages/credit/orders' })

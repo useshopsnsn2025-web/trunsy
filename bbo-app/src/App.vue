@@ -186,15 +186,7 @@ onLaunch(() => {
     return; // 不继续执行其他初始化，等待 OAuth 处理完成
   }
 
-  // 安卓设备强制跳转 APP 下载页（下载页本身除外）
-  const ua = navigator.userAgent.toLowerCase();
-  const isAndroid = ua.includes('android');
-  const currentPath = window.location.hash.replace('#', '') || window.location.pathname;
-  const isDownloadPage = currentPath.includes('/pages/share/download');
-  if (isAndroid && !isDownloadPage) {
-    uni.reLaunch({ url: '/pages/share/download' });
-    return;
-  }
+  // 安卓 H5 用户可自由浏览，需要登录时在 request.ts 中拦截跳转下载页
   // #endif
 
   // #ifdef APP-PLUS

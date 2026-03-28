@@ -62,7 +62,8 @@
     "applyCredit": "Ajukan Kredit",
     "installmentOrders": "Pesanan Cicilan",
     "orderDetail": "Detail Pesanan",
-    "download": "Unduh TURNSY"
+    "download": "Unduh",
+    "downloadAppPrompt": "Silakan unduh aplikasi TURNSY untuk melanjutkan. Nikmati pengalaman belanja yang lebih baik!"
   },
   "app": {
     "name": "TURNSY Marketplace",

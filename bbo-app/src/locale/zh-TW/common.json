@@ -15,7 +15,8 @@
     "applyCredit": "申請信用額度",
     "installmentOrders": "分期訂單",
     "orderDetail": "訂單詳情",
-    "download": "下載 TURNSY"
+    "download": "下載",
+    "downloadAppPrompt": "請下載 TURNSY APP 以繼續使用，享受更好的購物體驗！"
   },
   "app": {
     "name": "TURNSY二手交易",

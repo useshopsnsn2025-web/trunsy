@@ -378,7 +378,7 @@ import { useAppStore } from '@/store/modules/app'
 import RegionPicker from '@/components/RegionPicker.vue'
 import { useUserStore } from '@/store/modules/user'
 import { useI18n } from 'vue-i18n'
-import { put } from '@/utils/request'
+import { put, navigateToLogin } from '@/utils/request'
 import { getCouponCount } from '@/api/coupon'
 import { getUnreadCount } from '@/api/notification'
 import { getUserGameChances, getUserPoints } from '@/api/game'
@@ -471,7 +471,7 @@ function getRegisterYear(): string {
 }
 
 function goLogin() {
-  uni.navigateTo({ url: '/pages/auth/login' })
+  navigateToLogin()
 }
 
 function goProfile() {

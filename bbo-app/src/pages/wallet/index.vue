@@ -148,6 +148,7 @@ import { getWalletInfo, getTransactions, getWithdrawals, type WalletInfo, type T
 import { useToast } from '@/composables/useToast'
 import LoadingPage from '@/components/LoadingPage.vue'
 import NavBar from '@/components/NavBar.vue'
+import { navigateToLogin } from '@/utils/request'
 
 const { t, locale } = useI18n()
 const userStore = useUserStore()
@@ -310,7 +311,7 @@ async function loadRecentWithdrawals() {
 // 导航函数
 function goWithdraw() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   uni.navigateTo({ url: '/pages/wallet/withdraw' })
@@ -331,7 +332,7 @@ function goBankCards() {
 // 加载数据
 async function loadData() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
 

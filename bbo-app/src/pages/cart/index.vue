@@ -167,6 +167,7 @@ import { formatCurrencyAmount } from '@/utils/currency'
 import NavBar from '@/components/NavBar.vue'
 import LoadingPage from '@/components/LoadingPage.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { navigateToLogin } from '@/utils/request'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -210,7 +211,7 @@ function goBack() {
 
 // 去登录
 function goLogin() {
-  uni.navigateTo({ url: '/pages/auth/login' })
+  navigateToLogin()
 }
 
 // 继续购物

@@ -1345,7 +1345,7 @@ function handleMaintenanceClose() {
 }
 
 .sp-pwd-input {
-  width: 100%;
+  
   height: 96rpx;
   background: #FFFFFF;
   border: 2rpx solid #e0e0e0;

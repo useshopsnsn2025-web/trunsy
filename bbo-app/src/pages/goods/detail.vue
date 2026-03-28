@@ -790,6 +790,7 @@ import ShippingReturnPayment from '@/components/ShippingReturnPayment.vue'
 import MoneyBackGuarantee from '@/components/MoneyBackGuarantee.vue'
 import SharePopup from '@/components/SharePopup.vue'
 import { tracker } from '@/utils/tracker'
+import { navigateToLogin } from '@/utils/request'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -1428,7 +1429,7 @@ function previewImage(index: number) {
 
 async function toggleLike() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   if (!goods.value) return
@@ -1451,7 +1452,7 @@ async function toggleLike() {
 
 function goChat() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   if (!goods.value) return
@@ -1527,7 +1528,7 @@ function goToAddressPage() {
 // 收藏/取消收藏
 async function handleToggleLike() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   if (!goods.value) return
@@ -1552,7 +1553,7 @@ async function handleToggleLike() {
 
 async function addToCart() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
   if (!goods.value) return
@@ -1583,7 +1584,7 @@ async function addToCart() {
 
 async function buyNow() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
 

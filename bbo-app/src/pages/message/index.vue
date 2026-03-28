@@ -132,6 +132,7 @@ import {
 import CustomTabBar from '@/components/CustomTabBar.vue'
 import NavBar from '@/components/NavBar.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { navigateToLogin } from '@/utils/request'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -236,7 +237,7 @@ function getPreviewText(conv: Conversation) {
 }
 
 function goLogin() {
-  uni.navigateTo({ url: '/pages/auth/login' })
+  navigateToLogin()
 }
 
 // 头像加载失败处理 - 清空头像以显示首字母

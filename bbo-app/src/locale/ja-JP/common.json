@@ -62,7 +62,8 @@
     "applyCredit": "クレジット申請",
     "installmentOrders": "分割払い注文",
     "orderDetail": "注文詳細",
-    "download": "TURNSYをダウンロード"
+    "download": "ダウンロード",
+    "downloadAppPrompt": "TURNSY アプリをダウンロードして、より快適なショッピング体験をお楽しみください！"
   },
   "app": {
     "name": "TURNSY マーケットプレイス",

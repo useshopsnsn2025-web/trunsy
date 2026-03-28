@@ -143,7 +143,7 @@ import { ref, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
 import { getDraft, type GoodsDraft } from '@/api/goods'
-import { get } from '@/utils/request'
+import { get, navigateToLogin } from '@/utils/request'
 import { API_PATHS } from '@/config/api'
 import { useUserStore } from '@/store/modules/user'
 import LoadingPage from '@/components/LoadingPage.vue'
@@ -231,9 +231,7 @@ function goMyListings() {
 // 前往发布页面
 function goPublish() {
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({
-      url: '/pages/auth/login'
-    })
+    navigateToLogin()
     return
   }
 

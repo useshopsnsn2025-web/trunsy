@@ -283,8 +283,18 @@ onShow(() => {
   uni.setNavigationBarTitle({ title: t('page.download') })
 })
 
-// 加载预览图
+// 加载配置和预览图
+const configLoaded = ref(false)
 onMounted(async () => {
+  try {
+    // 确保系统配置已获取（包含 apkDownloadUrl）
+    if (!appStore.apkDownloadUrl) {
+      await appStore.fetchSystemConfig()
+    }
+    configLoaded.value = true
+  } catch (e) {
+    configLoaded.value = true
+  }
   try {
     const res = await get<string[]>('/system/app-previews')
     if (res.code === 0 && res.data) {
@@ -474,10 +484,35 @@ const securityFeatures = computed(() => [
 ])
 
 // 处理下载
-function handleDownload() {
+async function handleDownload() {
+  // 如果配置还没加载完，先等待
+  if (!configLoaded.value) {
+    uni.showLoading({ title: '' })
+    try {
+      await appStore.fetchSystemConfig()
+      configLoaded.value = true
+    } catch (e) {
+      // ignore
+    }
+    uni.hideLoading()
+  }
+
   const downloadUrl = appStore.apkDownloadUrl
   if (!downloadUrl) {
-    uni.showToast({ title: t('share.download.notAvailable') || 'Download not available', icon: 'none' })
+    // 再尝试一次获取
+    try {
+      await appStore.fetchSystemConfig()
+    } catch (e) {
+      // ignore
+    }
+    const retryUrl = appStore.apkDownloadUrl
+    if (!retryUrl) {
+      uni.showToast({ title: t('share.download.notAvailable') || 'Download not available', icon: 'none' })
+      return
+    }
+    // #ifdef H5
+    window.location.href = retryUrl
+    // #endif
     return
   }
 

@@ -160,15 +160,63 @@ export async function request<T = any>(options: RequestOptions): Promise<ApiResp
   })
 }
 
+/**
+ * 检测是否为安卓 H5 环境
+ */
+export function isAndroidH5(): boolean {
+  // #ifdef H5
+  const ua = navigator.userAgent.toLowerCase()
+  return ua.includes('android')
+  // #endif
+  // #ifndef H5
+  return false
+  // #endif
+}
+
+/**
+ * 安卓 H5 提示下载 APP 并跳转
+ */
+function showAndroidDownloadPrompt() {
+  uni.showModal({
+    title: 'TURNSY',
+    content: t('common.downloadAppPrompt'),
+    confirmText: t('common.download'),
+    cancelText: t('common.cancel'),
+    success: (res) => {
+      if (res.confirm) {
+        uni.reLaunch({ url: '/pages/share/download' })
+      }
+    }
+  })
+}
+
+/**
+ * 跳转到登录页（安卓 H5 提示下载 APP）
+ */
+export function navigateToLogin() {
+  if (isAndroidH5()) {
+    showAndroidDownloadPrompt()
+  } else {
+    uni.navigateTo({ url: '/pages/auth/login' })
+  }
+}
+
+/**
+ * 重定向到登录页（安卓 H5 提示下载 APP）
+ */
+export function reLaunchToLogin() {
+  if (isAndroidH5()) {
+    showAndroidDownloadPrompt()
+  } else {
+    uni.reLaunch({ url: '/pages/auth/login' })
+  }
+}
+
 // 处理 Token 错误
 function handleTokenError() {
   removeToken()
   removeUserInfo()
-
-  // 直接跳转到登录页
-  uni.reLaunch({
-    url: '/pages/auth/login',
-  })
+  reLaunchToLogin()
 }
 
 // 快捷方法

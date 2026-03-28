@@ -62,7 +62,8 @@
     "applyCredit": "Apply Credit",
     "installmentOrders": "Installment Orders",
     "orderDetail": "Order Detail",
-    "download": "Download TURNSY"
+    "download": "Download",
+    "downloadAppPrompt": "Please download the TURNSY app to continue. Enjoy a better shopping experience!"
   },
   "app": {
     "name": "TURNSY Marketplace",

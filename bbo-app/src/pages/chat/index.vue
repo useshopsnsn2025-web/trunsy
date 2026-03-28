@@ -356,6 +356,7 @@ import { playMessageSound, playSendSound, initAudio, destroyAudioContext } from 
 import { uploadChatImage } from '@/api/upload'
 import { useToast } from '@/composables/useToast'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { navigateToLogin } from '@/utils/request'
 
 const { t, locale: i18nLocale } = useI18n()
 const userStore = useUserStore()
@@ -1159,7 +1160,7 @@ onLoad((options) => {
   setupKeyboardListener()
 
   if (!userStore.isLoggedIn) {
-    uni.navigateTo({ url: '/pages/auth/login' })
+    navigateToLogin()
     return
   }
 
