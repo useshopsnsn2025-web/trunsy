@@ -92,9 +92,12 @@
               </div>
               <div class="goods-info">
                 <div class="goods-title">{{ row.goods_title }}</div>
-                <div class="goods-price">
-                  <span class="price-currency">{{ row.goods_currency }}</span>
-                  {{ Number(row.goods_price).toFixed(2) }}
+                <div class="goods-meta">
+                  <span class="goods-id">ID: {{ row.goods_id }}</span>
+                  <span class="goods-price">
+                    <span class="price-currency">{{ row.goods_currency }}</span>
+                    {{ Number(row.goods_price).toFixed(2) }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -335,8 +338,14 @@ onMounted(() => {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   max-width: 220px; line-height: 1.4;
 }
+.goods-meta {
+  display: flex; align-items: center; gap: 8px; margin-top: 2px;
+}
+.goods-id {
+  font-size: 11px; color: #94A3B8; font-weight: 500;
+}
 .goods-price {
-  font-size: 12px; color: #64748B; margin-top: 2px;
+  font-size: 12px; color: #64748B;
 }
 .price-currency {
   font-size: 11px; color: #94A3B8;

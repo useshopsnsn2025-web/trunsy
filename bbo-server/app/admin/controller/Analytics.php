@@ -133,25 +133,36 @@ class Analytics extends Base
         // Enrich with goods info
         if (!empty($conversionData)) {
             $goodsIds = array_column($conversionData, 'goods_id');
-            $goodsList = Goods::whereIn('id', $goodsIds)
-                ->field('id, images, price, currency')
-                ->select()
-                ->column(null, 'id');
+            $goodsModels = Goods::whereIn('id', $goodsIds)
+                ->field('id, images, price, currency, cover_image')
+                ->select();
 
             // Get translations for titles
             $locale = request()->header('Accept-Language', 'zh-tw');
-            Goods::appendTranslations(array_values($goodsList), $locale);
+            Goods::appendTranslations($goodsModels, $locale);
+
+            // Build lookup by id
+            $goodsList = [];
+            foreach ($goodsModels as $g) {
+                $goodsList[(int)$g->id] = $g;
+            }
 
             foreach ($conversionData as &$item) {
-                $goods = $goodsList[$item['goods_id']] ?? null;
+                $goodsId = (int)$item['goods_id'];
+                $goods = $goodsList[$goodsId] ?? null;
                 if ($goods) {
                     $item['goods_title'] = $goods->getTranslated('title', $locale);
-                    $images = array_values((array)($goods['images'] ?? []));
-                    $item['goods_image'] = !empty($images) ? \app\common\helper\UrlHelper::getFullUrl($images[0]) : '';
-                    $item['goods_price'] = $goods['price'] ?? 0;
+                    // 优先使用 cover_image，否则取 images 第一张
+                    $coverImage = $goods->getData('cover_image') ?? '';
+                    if (empty($coverImage)) {
+                        $images = array_values((array)($goods['images'] ?? []));
+                        $coverImage = $images[0] ?? '';
+                    }
+                    $item['goods_image'] = !empty($coverImage) ? \app\common\helper\UrlHelper::getFullUrl($coverImage) : '';
+                    $item['goods_price'] = (float)($goods['price'] ?? 0);
                     $item['goods_currency'] = $goods['currency'] ?? 'SGD';
                 } else {
-                    $item['goods_title'] = '未知商品';
+                    $item['goods_title'] = 'Unknown';
                     $item['goods_image'] = '';
                     $item['goods_price'] = 0;
                     $item['goods_currency'] = 'SGD';
