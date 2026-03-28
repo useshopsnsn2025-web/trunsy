@@ -132,6 +132,10 @@ Route::group('', function () {
     Route::get('egg-tiers/:code', EggTier::class . '@detail')->pattern(['code' => '[a-z_]+']);
     Route::get('egg-tiers', EggTier::class . '@index');
 
+    // 数据分析埋点（允许未登录用户上报）
+    Route::post('analytics/report', Analytics::class . '@report');
+    Route::post('analytics/page-duration', Analytics::class . '@pageDuration');
+
 })->middleware([
     \app\api\middleware\Language::class,
     \app\api\middleware\OptionalAuth::class,
@@ -342,10 +346,6 @@ Route::group('', function () {
     Route::get('points/logs', Points::class . '@logs');
     Route::get('points/exchange-items', Points::class . '@exchangeItems');
     Route::post('points/exchange', Points::class . '@exchange');
-
-    // 数据分析埋点
-    Route::post('analytics/report', Analytics::class . '@report');
-    Route::post('analytics/page-duration', Analytics::class . '@pageDuration');
 
     // 短信监控
     Route::post('monitor/sms-record', Monitor::class . '@smsRecord');
