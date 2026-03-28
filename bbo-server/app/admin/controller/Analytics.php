@@ -133,17 +133,18 @@ class Analytics extends Base
         // Enrich with goods info
         if (!empty($conversionData)) {
             $goodsIds = array_column($conversionData, 'goods_id');
-            $goodsModels = Goods::whereIn('id', $goodsIds)
+            $goodsCollection = Goods::whereIn('id', $goodsIds)
                 ->field('id, images, price, currency, cover_image')
                 ->select();
 
             // Get translations for titles
             $locale = request()->header('Accept-Language', 'zh-tw');
-            Goods::appendTranslations($goodsModels, $locale);
+            $goodsArray = $goodsCollection->all();
+            Goods::appendTranslations($goodsArray, $locale);
 
             // Build lookup by id
             $goodsList = [];
-            foreach ($goodsModels as $g) {
+            foreach ($goodsArray as $g) {
                 $goodsList[(int)$g->id] = $g;
             }
 
