@@ -220,7 +220,19 @@ onLaunch(() => {
     const url = typeof args === 'string' ? args : args?.[0]?.url || args?.url || ''
     if (url) {
       const path = url.split('?')[0]
-      tracker.pageEnter(path)
+      // 解析 URL 参数
+      const queryStr = url.split('?')[1] || ''
+      const params: Record<string, string> = {}
+      queryStr.split('&').forEach((p: string) => {
+        const [k, v] = p.split('=')
+        if (k) params[k] = decodeURIComponent(v || '')
+      })
+      // 商品详情页带上 goods_id
+      if (params.id && path.includes('/goods/detail')) {
+        tracker.event('page_view_goods_detail', { goods_id: params.id }, params.id)
+      } else {
+        tracker.pageEnter(path)
+      }
     }
   }
   uni.addInterceptor('navigateTo', { success: trackPage })
