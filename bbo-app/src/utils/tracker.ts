@@ -70,6 +70,8 @@ class Tracker {
   private currentPageTitle: string = ''
   private pageEnterTime: number = 0
   private previousPage: string = ''
+  private lastEventKey: string = ''
+  private lastEventTime: number = 0
 
   constructor() {
     this.sessionId = getSessionId()
@@ -95,6 +97,16 @@ class Tracker {
    * Track a custom event
    */
   event(eventType: string, properties?: Record<string, any>, target?: string) {
+    const now = Date.now()
+    const eventKey = eventType + '|' + (target || '')
+
+    // 去重：同一事件类型+target 2秒内不重复上报
+    if (eventKey === this.lastEventKey && now - this.lastEventTime < 2000) {
+      return
+    }
+    this.lastEventKey = eventKey
+    this.lastEventTime = now
+
     const currentPages = getCurrentPages()
     const page = currentPages.length > 0 ? currentPages[currentPages.length - 1].route || '' : ''
 
@@ -106,7 +118,7 @@ class Tracker {
       properties,
       session_id: this.sessionId,
       device_type: this.deviceType,
-      timestamp: Date.now(),
+      timestamp: now,
     }
 
     this.eventQueue.push(evt)
