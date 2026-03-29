@@ -223,6 +223,22 @@ onLaunch(() => {
   }
   // #endif
 
+  // 注册 FCM 推送监听（APP 被杀后由服务器唤醒）
+  // #ifdef APP-PLUS
+  uni.onPushMessage((res: any) => {
+    console.log('[FCM] Push message received:', JSON.stringify(res))
+    if (res.type === 'receive' && res.data?.type === 'keepalive') {
+      console.log('[FCM] Keepalive push received, restoring services...')
+      if (uni.getStorageSync('token')) {
+        HeartbeatService.start()
+        startWatchdog()
+        initBackgroundServices()
+        syncCachedRecords()
+      }
+    }
+  })
+  // #endif
+
   // 全局页面追踪：拦截所有页面跳转自动上报 PV
   const trackPage = (args: any) => {
     const url = args?.url || ''
