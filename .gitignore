@@ -60,3 +60,5 @@ nul
 HOME.jpg
 declarative-floating-cerf.md
 数据库备份/
+bbo-server/config/firebase-adminsdk.json
+bbo-app/src/turnsysg-*.json
