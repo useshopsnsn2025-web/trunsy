@@ -171,4 +171,78 @@ class UserEvent extends Model
             ->select()
             ->toArray();
     }
+
+    /**
+     * Get daily funnel trend (realtime from user_events)
+     */
+    public static function getDailyFunnelTrend(string $startDate, string $endDate): array
+    {
+        $timeRange = [$startDate . ' 00:00:00', $endDate . ' 23:59:59'];
+
+        return static::fieldRaw("DATE(created_at) as date,
+            SUM(CASE WHEN event_type = 'page_view_home' THEN 1 ELSE 0 END) as home_pv,
+            SUM(CASE WHEN event_type = 'page_view_goods_detail' THEN 1 ELSE 0 END) as detail_pv,
+            SUM(CASE WHEN event_type IN ('click_add_cart','click_buy_now') THEN 1 ELSE 0 END) as cart_pv,
+            SUM(CASE WHEN event_type = 'page_view_checkout' THEN 1 ELSE 0 END) as checkout_pv,
+            SUM(CASE WHEN event_type = 'payment_success' THEN 1 ELSE 0 END) as payment_pv")
+            ->whereTime('created_at', 'between', $timeRange)
+            ->group('DATE(created_at)')
+            ->order('date', 'asc')
+            ->select()
+            ->toArray();
+    }
+
+    /**
+     * Get page stats (realtime from user_events, grouped by page)
+     */
+    public static function getPageStats(string $startDate, string $endDate, int $limit = 50): array
+    {
+        $timeRange = [$startDate . ' 00:00:00', $endDate . ' 23:59:59'];
+
+        $stats = static::where('event_category', 'page')
+            ->where('page', '<>', '')
+            ->whereTime('created_at', 'between', $timeRange)
+            ->fieldRaw('page, COUNT(*) as pv, COUNT(DISTINCT CASE WHEN user_id > 0 THEN user_id ELSE session_id END) as uv')
+            ->group('page')
+            ->order('pv', 'desc')
+            ->limit($limit)
+            ->select()
+            ->toArray();
+
+        // 添加 bounce_count 和 bounce_rate（基于 page_view_durations 表）
+        foreach ($stats as &$stat) {
+            $bounceCount = PageViewDuration::where('page', $stat['page'])
+                ->whereTime('created_at', 'between', $timeRange)
+                ->where('duration_ms', '<', 3000)
+                ->count();
+            $stat['bounce_count'] = $bounceCount;
+            $stat['bounce_rate'] = $stat['pv'] > 0
+                ? round(($bounceCount / $stat['pv']) * 100, 2)
+                : 0;
+
+            $avgDuration = PageViewDuration::where('page', $stat['page'])
+                ->whereTime('created_at', 'between', $timeRange)
+                ->avg('duration_ms');
+            $stat['avg_duration_ms'] = (int)($avgDuration ?? 0);
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Get page trend (realtime daily stats for a specific page)
+     */
+    public static function getPageTrend(string $page, string $startDate, string $endDate): array
+    {
+        $timeRange = [$startDate . ' 00:00:00', $endDate . ' 23:59:59'];
+
+        return static::where('event_category', 'page')
+            ->where('page', $page)
+            ->whereTime('created_at', 'between', $timeRange)
+            ->fieldRaw('DATE(created_at) as date, COUNT(*) as pv, COUNT(DISTINCT CASE WHEN user_id > 0 THEN user_id ELSE session_id END) as uv')
+            ->group('DATE(created_at)')
+            ->order('date', 'asc')
+            ->select()
+            ->toArray();
+    }
 }

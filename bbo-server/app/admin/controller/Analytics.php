@@ -36,44 +36,13 @@ class Analytics extends Base
     {
         $startDate = input('get.start_date', date('Y-m-d', strtotime('-7 days')));
         $endDate = input('get.end_date', date('Y-m-d'));
-        $funnelType = input('get.funnel_type', 'purchase');
 
-        // If date range is recent (includes today), use realtime query
+        // 始终使用实时查询
         $service = new AnalyticsService();
-        $today = date('Y-m-d');
+        $steps = $service->getRealtimeFunnel($startDate, $endDate);
 
-        if ($endDate >= $today) {
-            // Use realtime calculation
-            $steps = $service->getRealtimeFunnel($startDate, $endDate);
-        } else {
-            // Use aggregated data
-            $rawSteps = DailyFunnelStats::getFunnelStats($funnelType, $startDate, $endDate);
-
-            $steps = [];
-            $firstUv = 0;
-            foreach ($rawSteps as $index => $step) {
-                $uv = (int)$step['uv'];
-                if ($index === 0) {
-                    $firstUv = $uv;
-                }
-                $steps[] = [
-                    'step_order' => (int)$step['step_order'],
-                    'step_name' => $step['step_name'],
-                    'step_event' => $step['step_event'],
-                    'uv' => $uv,
-                    'pv' => (int)$step['pv'],
-                    'overall_rate' => $firstUv > 0 ? round(($uv / $firstUv) * 100, 2) : 0,
-                    'step_rate' => $index > 0
-                        ? (($steps[$index - 1]['uv'] ?? 0) > 0
-                            ? round(($uv / $steps[$index - 1]['uv']) * 100, 2)
-                            : 0)
-                        : 100,
-                ];
-            }
-        }
-
-        // Get trend data
-        $trend = DailyFunnelStats::getFunnelTrend($funnelType, $startDate, $endDate);
+        // 实时趋势：按天查询漏斗第一步和最后一步
+        $trend = UserEvent::getDailyFunnelTrend($startDate, $endDate);
 
         return $this->success([
             'steps' => $steps,
@@ -91,28 +60,15 @@ class Analytics extends Base
         $endDate = input('get.end_date', date('Y-m-d'));
         $page = input('get.page', '');
 
-        $today = date('Y-m-d');
-
-        // Use realtime data if range includes today
-        if ($endDate >= $today) {
-            $stats = PageViewDuration::getPageStats($startDate, $endDate);
-        } else {
-            $stats = DailyPageStats::getPageStats($startDate, $endDate);
-        }
-
-        // Calculate bounce rate for each page
-        foreach ($stats as &$stat) {
-            $stat['bounce_rate'] = $stat['pv'] > 0
-                ? round(($stat['bounce_count'] / $stat['pv']) * 100, 2)
-                : 0;
-        }
+        // 始终使用实时查询 user_events 表
+        $stats = UserEvent::getPageStats($startDate, $endDate);
 
         $result = ['list' => $stats];
 
         // If specific page requested, include distribution and trend
         if ($page) {
             $result['distribution'] = PageViewDuration::getDurationDistribution($page, $startDate, $endDate);
-            $result['trend'] = DailyPageStats::getPageTrend($page, $startDate, $endDate);
+            $result['trend'] = UserEvent::getPageTrend($page, $startDate, $endDate);
         }
 
         return $this->success($result);
