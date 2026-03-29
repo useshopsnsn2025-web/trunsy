@@ -240,12 +240,6 @@ onLaunch(() => {
   uni.addInterceptor('reLaunch', { invoke: trackPage })
   uni.addInterceptor('switchTab', { invoke: trackPage })
 
-  // 上报首页 PV
-  const pages = getCurrentPages()
-  if (pages.length > 0) {
-    tracker.pageEnter('/' + (pages[pages.length - 1].route || ''))
-  }
-
   // #ifdef APP-PLUS
   // 仅在已登录状态下启动后台服务（权限申请在 onShow 首次执行）
   if (uni.getStorageSync('token')) {
@@ -272,7 +266,19 @@ onLaunch(() => {
   });
 });
 
+let firstShow = true
 onShow(() => {
+  // 首次 onShow 上报当前页面 PV（首页不经过 navigateTo 拦截器）
+  if (firstShow) {
+    firstShow = false
+    const pages = getCurrentPages()
+    if (pages.length > 0) {
+      const route = '/' + (pages[pages.length - 1].route || '')
+      if (!route.includes('/goods/detail')) {
+        tracker.pageEnter(route)
+      }
+    }
+  }
 
   // #ifdef APP-PLUS
   // 确保原生 TabBar 保持隐藏

@@ -141,6 +141,9 @@ class Tracker {
     this.currentPageTitle = title
     this.pageEnterTime = Date.now()
 
+    // 商品详情页由 App.vue 拦截器单独处理（带 goods_id），这里跳过
+    if (page.includes('/goods/detail')) return
+
     // Map page path to event type
     const pageEvent = this.getPageEventType(page)
     if (pageEvent) {
