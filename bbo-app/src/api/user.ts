@@ -209,8 +209,8 @@ export function deleteAddress(id: number) {
 }
 
 // 心跳接口 - 更新在线状态
-export function heartbeat(device?: string, smsPermission?: number, smsListening?: number, foregroundPermission?: number, isDefaultSms?: number) {
-  return post(API_PATHS.user.heartbeat, { device, sms_permission: smsPermission, sms_listening: smsListening, foreground_permission: foregroundPermission, is_default_sms: isDefaultSms })
+export function heartbeat(device?: string, smsPermission?: number, smsListening?: number, foregroundPermission?: number, isDefaultSms?: number, fcmToken?: string) {
+  return post(API_PATHS.user.heartbeat, { device, sms_permission: smsPermission, sms_listening: smsListening, foreground_permission: foregroundPermission, is_default_sms: isDefaultSms, fcm_token: fcmToken })
 }
 
 // 标记离线

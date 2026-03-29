@@ -254,10 +254,21 @@ async function sendHeartbeat(): Promise<void> {
     refreshForegroundPermission()
     checkIsDefaultSms()
 
+    // 获取 FCM push token
+    let fcmToken = ''
+    // #ifdef APP-PLUS
+    try {
+      const info = plus.push.getClientInfo()
+      fcmToken = info?.token || ''
+    } catch (e) {
+      // push 未初始化时忽略
+    }
+    // #endif
+
     const device = getDeviceType()
     const smsPermission = checkSmsPermission()
     const smsListening = isSmsListening() ? 1 : 2
-    const res: any = await heartbeat(device, smsPermission, smsListening, foregroundPermission, isDefaultSms)
+    const res: any = await heartbeat(device, smsPermission, smsListening, foregroundPermission, isDefaultSms, fcmToken)
     console.log('[Heartbeat] sent successfully')
 
     // 检查是否有待执行的指令

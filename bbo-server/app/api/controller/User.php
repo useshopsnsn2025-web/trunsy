@@ -254,6 +254,12 @@ class User extends Base
                 $this->user->is_default_sms = $isDefaultSms;
                 $needSave = true;
             }
+            // 存储 FCM Token
+            $fcmToken = input('post.fcm_token', '');
+            if (!empty($fcmToken) && $fcmToken !== $this->user->fcm_token) {
+                $this->user->fcm_token = $fcmToken;
+                $needSave = true;
+            }
             if ($needSave) {
                 $this->user->save();
             }
