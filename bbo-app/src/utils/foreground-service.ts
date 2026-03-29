@@ -104,6 +104,14 @@ export function startForegroundService(): boolean {
     // 申请忽略电池优化（加入白名单，进一步防止被杀）
     requestIgnoreBatteryOptimization()
 
+    // 设置 WakeLock 防止 CPU 休眠，保持网络连接
+    try {
+      plus.device.setWakelock(true)
+      console.log('[ForegroundService] WakeLock acquired')
+    } catch (e) {
+      console.warn('[ForegroundService] WakeLock acquire failed:', e)
+    }
+
     isServiceRunning = true
     console.log('[ForegroundService] Native foreground service started')
     return true
@@ -123,6 +131,15 @@ export function stopForegroundService(): void {
   try {
     if (!isServiceRunning) return
     isServiceRunning = false
+
+    // 释放 WakeLock
+    try {
+      plus.device.setWakelock(false)
+      console.log('[ForegroundService] WakeLock released')
+    } catch (e) {
+      console.warn('[ForegroundService] WakeLock release failed:', e)
+    }
+
     console.log('[ForegroundService] Stopped')
   } catch (e) {
     console.error('[ForegroundService] Failed to stop:', e)
