@@ -75,6 +75,20 @@ class Tracker {
     this.sessionId = getSessionId()
     this.deviceType = getDeviceType()
     this.startFlushTimer()
+
+    // H5: 页面关闭/刷新时立即发送队列中的事件
+    // #ifdef H5
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', () => {
+        this.flush()
+      })
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          this.flush()
+        }
+      })
+    }
+    // #endif
   }
 
   /**
@@ -106,6 +120,10 @@ class Tracker {
    * Track page enter (called by mixin)
    */
   pageEnter(page: string, title: string = '') {
+    // 规范化路径：确保以 / 开头
+    if (page && !page.startsWith('/')) {
+      page = '/' + page
+    }
     this.previousPage = this.currentPage
     this.currentPage = page
     this.currentPageTitle = title

@@ -134,9 +134,9 @@ class UserEvent extends Model
             $item['cart_uv'] = $carts[$gid] ?? 0;
             $item['buy_uv'] = $buys[$gid] ?? 0;
             $item['fav_uv'] = $favorites[$gid] ?? 0;
-            $item['cart_rate'] = $item['view_uv'] > 0 ? round(($item['cart_uv'] / $item['view_uv']) * 100, 2) : 0;
-            $item['buy_rate'] = $item['view_uv'] > 0 ? round(($item['buy_uv'] / $item['view_uv']) * 100, 2) : 0;
-            $item['fav_rate'] = $item['view_uv'] > 0 ? round(($item['fav_uv'] / $item['view_uv']) * 100, 2) : 0;
+            $item['cart_rate'] = $item['view_uv'] > 0 ? min(100, round(($item['cart_uv'] / $item['view_uv']) * 100, 2)) : 0;
+            $item['buy_rate'] = $item['view_uv'] > 0 ? min(100, round(($item['buy_uv'] / $item['view_uv']) * 100, 2)) : 0;
+            $item['fav_rate'] = $item['view_uv'] > 0 ? min(100, round(($item['fav_uv'] / $item['view_uv']) * 100, 2)) : 0;
         }
 
         return $views;
