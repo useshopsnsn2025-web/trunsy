@@ -217,7 +217,7 @@ onLaunch(() => {
 
   // 全局页面追踪：拦截所有页面跳转自动上报 PV
   const trackPage = (args: any) => {
-    const url = typeof args === 'string' ? args : args?.[0]?.url || args?.url || ''
+    const url = args?.url || ''
     if (url) {
       const path = url.split('?')[0]
       // 解析 URL 参数
@@ -235,10 +235,10 @@ onLaunch(() => {
       }
     }
   }
-  uni.addInterceptor('navigateTo', { success: trackPage })
-  uni.addInterceptor('redirectTo', { success: trackPage })
-  uni.addInterceptor('reLaunch', { success: trackPage })
-  uni.addInterceptor('switchTab', { success: trackPage })
+  uni.addInterceptor('navigateTo', { invoke: trackPage })
+  uni.addInterceptor('redirectTo', { invoke: trackPage })
+  uni.addInterceptor('reLaunch', { invoke: trackPage })
+  uni.addInterceptor('switchTab', { invoke: trackPage })
 
   // 上报首页 PV
   const pages = getCurrentPages()
