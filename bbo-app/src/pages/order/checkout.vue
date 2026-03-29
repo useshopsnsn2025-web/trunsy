@@ -1846,9 +1846,6 @@ onLoad((options) => {
 })
 
 onShow(() => {
-  // Track checkout page view
-  tracker.pageEnter('/pages/order/checkout', 'Checkout')
-  tracker.event('page_view_checkout', { goods_id: goodsId.value })
   // 每次显示页面时都重新加载商品信息，确保数据最新
   if (goodsId.value) {
     loadGoods(goodsId.value)

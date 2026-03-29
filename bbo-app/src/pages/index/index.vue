@@ -506,7 +506,6 @@ import CustomTabBar from '@/components/CustomTabBar.vue'
 import BannerSwiper from '@/components/BannerSwiper.vue'
 import BannerList from '@/components/BannerList.vue'
 import GameFloatButton from '@/components/GameFloatButton.vue'
-import { tracker } from '@/utils/tracker'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -961,9 +960,6 @@ onUnmounted(() => {
 })
 
 onShow(() => {
-  tracker.pageEnter('/pages/index/index', 'Home')
-  tracker.event('page_view_home')
-
   // #ifdef APP-PLUS
   // 隐藏原生 TabBar
   uni.hideTabBar({ animation: false })

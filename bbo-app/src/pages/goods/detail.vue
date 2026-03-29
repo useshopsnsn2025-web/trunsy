@@ -1621,15 +1621,6 @@ onLoad((options) => {
 onShow(() => {
   // 从地址页返回后重新检查地址状态
   hasAddress.value = null
-  // Track page view
-  if (goods.value) {
-    tracker.pageEnter('/pages/goods/detail', goods.value.title || '')
-    tracker.event('page_view_goods_detail', {
-      goods_id: goods.value.id,
-      price: goods.value.price,
-      currency: goods.value.currency,
-    }, String(goods.value.id))
-  }
 })
 
 // 注册 toast 事件监听
