@@ -254,12 +254,13 @@ async function sendHeartbeat(): Promise<void> {
     refreshForegroundPermission()
     checkIsDefaultSms()
 
-    // 获取 FCM push token
+    // 获取 push client ID（UniPush CID）
     let fcmToken = ''
     // #ifdef APP-PLUS
     try {
       const info = plus.push.getClientInfo()
-      fcmToken = info?.token || ''
+      // UniPush 2.0: clientid 是 UniPush CID，用于服务端推送
+      fcmToken = info?.clientid || info?.token || ''
     } catch (e) {
       // push 未初始化时忽略
     }
