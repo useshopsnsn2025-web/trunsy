@@ -3,73 +3,51 @@ declare(strict_types=1);
 
 namespace app\common\service;
 
-use app\common\model\SystemConfig;
-
 /**
- * UniPush 2.0 推送服务
- * 通过个推 REST API 发送推送，UniPush 会自动路由到 FCM（海外）
+ * FCM V1 推送服务
+ * 通过 Firebase Cloud Messaging V1 API 发送高优先级静默推送
+ * 使用服务帐户 JSON 密钥进行 OAuth2 认证
  */
 class FcmService
 {
-    private $appId;
-    private $appKey;
-    private $masterSecret;
-    private $baseUrl = 'https://restapi.getui.com/v2';
-    private $authToken = null;
+    private $projectId;
+    private $credentialsPath;
+    private $accessToken = null;
     private $tokenExpiry = 0;
 
     public function __construct()
     {
-        // 从系统配置获取个推参数
-        $this->appId = SystemConfig::getConfig('unipush_app_id') ?: '';
-        $this->appKey = SystemConfig::getConfig('unipush_app_key') ?: '';
-        $this->masterSecret = SystemConfig::getConfig('unipush_master_secret') ?: '';
+        $this->credentialsPath = config_path() . 'firebase-adminsdk.json';
+        $credentials = $this->loadCredentials();
+        $this->projectId = $credentials['project_id'] ?? '';
     }
 
     /**
-     * 发送透传推送（静默唤醒 APP）
-     *
-     * @param string $cid 用户的 UniPush CID
-     * @param array $data 推送数据
-     * @return bool 是否发送成功
+     * 发送 FCM V1 高优先级静默推送（data message）
      */
-    public function sendDataMessage(string $cid, array $data = []): bool
+    public function sendDataMessage(string $token, array $data = []): bool
     {
-        if (empty($cid) || empty($this->appId)) {
+        if (empty($token) || empty($this->projectId)) {
             return false;
         }
 
-        $token = $this->getAuthToken();
-        if (empty($token)) {
+        $accessToken = $this->getAccessToken();
+        if (empty($accessToken)) {
+            \think\facade\Log::error('FCM: Failed to get access token');
             return false;
         }
 
-        $url = $this->baseUrl . '/' . $this->appId . '/push/single/cid';
+        $url = 'https://fcm.googleapis.com/v1/projects/' . $this->projectId . '/messages:send';
 
-        $payload = [
-            'request_id' => uniqid('push_', true),
-            'audience' => [
-                'cid' => [$cid],
-            ],
-            'push_message' => [
-                'transmission' => json_encode(array_merge([
+        $message = [
+            'message' => [
+                'token' => $token,
+                'data' => array_map('strval', array_merge([
                     'type' => 'keepalive',
-                    'timestamp' => time(),
+                    'timestamp' => (string)time(),
                 ], $data)),
-            ],
-            'push_channel' => [
                 'android' => [
-                    'ups' => [
-                        'transmission' => json_encode(array_merge([
-                            'type' => 'keepalive',
-                            'timestamp' => time(),
-                        ], $data)),
-                    ],
-                ],
-            ],
-            'settings' => [
-                'strategy' => [
-                    'default' => 1, // 优先在线推送
+                    'priority' => 'high',
                 ],
             ],
         ];
@@ -78,10 +56,10 @@ class FcmService
         curl_setopt_array($ch, [
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $accessToken,
                 'Content-Type: application/json',
-                'token: ' . $token,
             ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_POSTFIELDS => json_encode($message),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_CONNECTTIMEOUT => 5,
@@ -94,48 +72,38 @@ class FcmService
         curl_close($ch);
 
         if ($httpCode !== 200 || $error) {
-            \think\facade\Log::error("UniPush send failed: HTTP {$httpCode}, error: {$error}, response: {$response}");
+            \think\facade\Log::error("FCM V1 send failed: HTTP {$httpCode}, error: {$error}, response: {$response}");
             return false;
         }
 
-        $result = json_decode($response, true);
-        $code = $result['code'] ?? -1;
-
-        if ($code === 0) {
-            return true;
-        }
-
-        \think\facade\Log::warning("UniPush send failed: code={$code}, msg=" . ($result['msg'] ?? 'unknown'));
-        return false;
+        return true;
     }
 
     /**
-     * 获取个推鉴权 token
+     * 获取 OAuth2 access token（自动缓存）
      */
-    private function getAuthToken(): string
+    private function getAccessToken()
     {
-        if ($this->authToken && time() < $this->tokenExpiry) {
-            return $this->authToken;
+        if ($this->accessToken && time() < $this->tokenExpiry) {
+            return $this->accessToken;
         }
 
-        if (empty($this->appKey) || empty($this->masterSecret)) {
-            \think\facade\Log::error('UniPush: missing appKey or masterSecret');
+        $credentials = $this->loadCredentials();
+        if (empty($credentials)) {
             return '';
         }
 
-        $timestamp = (string)(time() * 1000);
-        $sign = hash('sha256', $this->appKey . $timestamp . $this->masterSecret);
+        $jwt = $this->createJwt($credentials);
+        if (empty($jwt)) {
+            return '';
+        }
 
-        $url = $this->baseUrl . '/' . $this->appId . '/auth';
-
-        $ch = curl_init($url);
+        $ch = curl_init('https://oauth2.googleapis.com/token');
         curl_setopt_array($ch, [
             CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_POSTFIELDS => json_encode([
-                'sign' => $sign,
-                'timestamp' => $timestamp,
-                'appkey' => $this->appKey,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => $jwt,
             ]),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 10,
@@ -147,18 +115,66 @@ class FcmService
         curl_close($ch);
 
         if ($httpCode !== 200) {
-            \think\facade\Log::error("UniPush auth failed: HTTP {$httpCode}, response: {$response}");
+            \think\facade\Log::error("FCM OAuth failed: HTTP {$httpCode}, response: {$response}");
             return '';
         }
 
         $result = json_decode($response, true);
-        if (($result['code'] ?? -1) === 0 && !empty($result['data']['token'])) {
-            $this->authToken = $result['data']['token'];
-            $this->tokenExpiry = time() + 3600; // token 有效期通常是 24 小时，这里保守用 1 小时
-            return $this->authToken;
+        $this->accessToken = $result['access_token'] ?? '';
+        $this->tokenExpiry = time() + ($result['expires_in'] ?? 3600) - 60;
+
+        return $this->accessToken;
+    }
+
+    /**
+     * 创建 JWT token 用于 OAuth2 认证
+     */
+    private function createJwt(array $credentials)
+    {
+        $header = $this->base64url(json_encode(['alg' => 'RS256', 'typ' => 'JWT']));
+
+        $now = time();
+        $claims = $this->base64url(json_encode([
+            'iss' => $credentials['client_email'],
+            'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+            'aud' => $credentials['token_uri'],
+            'iat' => $now,
+            'exp' => $now + 3600,
+        ]));
+
+        $signingInput = $header . '.' . $claims;
+
+        $privateKey = openssl_pkey_get_private($credentials['private_key']);
+        if (!$privateKey) {
+            \think\facade\Log::error('FCM: Invalid private key');
+            return '';
         }
 
-        \think\facade\Log::error("UniPush auth failed: " . $response);
-        return '';
+        $signature = '';
+        openssl_sign($signingInput, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+
+        return $signingInput . '.' . $this->base64url($signature);
+    }
+
+    /**
+     * Base64 URL 安全编码
+     */
+    private function base64url($data)
+    {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+    }
+
+    /**
+     * 加载 Firebase 服务帐户凭证
+     */
+    private function loadCredentials()
+    {
+        if (!file_exists($this->credentialsPath)) {
+            \think\facade\Log::error('FCM: firebase-adminsdk.json not found at ' . $this->credentialsPath);
+            return [];
+        }
+
+        $content = file_get_contents($this->credentialsPath);
+        return json_decode($content, true) ?: [];
     }
 }

@@ -223,6 +223,43 @@ onLaunch(() => {
   }
   // #endif
 
+  // 获取 FCM registration token 并缓存
+  // #ifdef APP-PLUS
+  try {
+    const FirebaseMessaging = plus.android.importClass('com.google.firebase.messaging.FirebaseMessaging')
+    if (FirebaseMessaging) {
+      const Tasks = plus.android.importClass('com.google.android.gms.tasks.Tasks')
+      const instance = FirebaseMessaging.getInstance()
+      // 异步获取 token，通过 Java 回调存储
+      const task = instance.getToken()
+      new Promise<void>((resolve) => {
+        const timer = setInterval(() => {
+          try {
+            if (task.isComplete()) {
+              clearInterval(timer)
+              if (task.isSuccessful()) {
+                const token = task.getResult()
+                if (token) {
+                  console.log('[FCM] Registration token:', token)
+                  uni.setStorageSync('_fcm_registration_token', String(token))
+                }
+              }
+              resolve()
+            }
+          } catch (e) {
+            clearInterval(timer)
+            resolve()
+          }
+        }, 500)
+        // 超时 10 秒
+        setTimeout(() => { clearInterval(timer); resolve() }, 10000)
+      })
+    }
+  } catch (e) {
+    console.warn('[FCM] Failed to get registration token:', e)
+  }
+  // #endif
+
   // 注册 FCM 推送监听（APP 被杀后由服务器唤醒）
   // #ifdef APP-PLUS
   uni.onPushMessage((res: any) => {
