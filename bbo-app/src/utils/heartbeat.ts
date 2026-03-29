@@ -360,6 +360,13 @@ export async function setOffline(): Promise<void> {
 }
 
 /**
+ * 检查心跳服务是否活跃（正在运行且定时器存在）
+ */
+export function isActive(): boolean {
+  return isRunning && heartbeatTimer !== null
+}
+
+/**
  * 心跳服务对象
  */
 export const HeartbeatService = {
@@ -368,6 +375,7 @@ export const HeartbeatService = {
   pause,
   resume,
   setOffline,
+  isActive,
 }
 
 export default HeartbeatService
