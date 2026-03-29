@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/modules/user";
 import { useAppStore } from "@/store/modules/app";
 import { getUnreadCount } from "@/api/chat";
 import HeartbeatService from "@/utils/heartbeat";
+import { startWatchdog, stopWatchdog } from '@/utils/watchdog'
 import { getLocale, loadTranslationsFromServer, fetchServerDefaultLocale, setLocale, resolveLocaleReady } from "@/locale";
 import { tracker } from "@/utils/tracker";
 // #ifdef H5
@@ -215,6 +216,13 @@ onLaunch(() => {
   // 启动心跳服务（维持在线状态）
   HeartbeatService.start();
 
+  // 启动看门狗（网络监控 + 服务健康检查）
+  // #ifdef APP-PLUS
+  if (uni.getStorageSync('token')) {
+    startWatchdog()
+  }
+  // #endif
+
   // 全局页面追踪：拦截所有页面跳转自动上报 PV
   const trackPage = (args: any) => {
     const url = args?.url || ''
@@ -256,6 +264,7 @@ onLaunch(() => {
   uni.$on('userLogin', () => {
     HeartbeatService.start();
     // #ifdef APP-PLUS
+    startWatchdog()
     // 登录后重置标志，下次 onShow 触发时重新执行权限申请 + 服务初始化
     permissionInitDone = false
     initBackgroundServices();
@@ -263,6 +272,9 @@ onLaunch(() => {
   });
   uni.$on('userLogout', () => {
     HeartbeatService.setOffline();
+    // #ifdef APP-PLUS
+    stopWatchdog()
+    // #endif
   });
 });
 
