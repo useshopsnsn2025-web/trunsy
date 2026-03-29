@@ -11,5 +11,6 @@ return [
         \app\command\ImportUiTranslations::class,
         \app\command\TestNotification::class,
         \app\command\GoodsExport::class,
+        \app\command\FcmCheckOffline::class,
     ],
 ];
