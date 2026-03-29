@@ -70,8 +70,7 @@ class Tracker {
   private currentPageTitle: string = ''
   private pageEnterTime: number = 0
   private previousPage: string = ''
-  private lastEventKey: string = ''
-  private lastEventTime: number = 0
+  private recentEvents: Map<string, number> = new Map()
 
   constructor() {
     this.sessionId = getSessionId()
@@ -101,11 +100,17 @@ class Tracker {
     const eventKey = eventType + '|' + (target || '')
 
     // 去重：同一事件类型+target 2秒内不重复上报
-    if (eventKey === this.lastEventKey && now - this.lastEventTime < 2000) {
+    const lastTime = this.recentEvents.get(eventKey)
+    if (lastTime && now - lastTime < 2000) {
       return
     }
-    this.lastEventKey = eventKey
-    this.lastEventTime = now
+    this.recentEvents.set(eventKey, now)
+    // 清理超过 10 秒的旧记录
+    if (this.recentEvents.size > 50) {
+      for (const [key, time] of this.recentEvents) {
+        if (now - time > 10000) this.recentEvents.delete(key)
+      }
+    }
 
     const currentPages = getCurrentPages()
     const page = currentPages.length > 0 ? currentPages[currentPages.length - 1].route || '' : ''

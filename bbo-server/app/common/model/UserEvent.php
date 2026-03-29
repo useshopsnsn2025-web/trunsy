@@ -180,11 +180,11 @@ class UserEvent extends Model
         $timeRange = [$startDate . ' 00:00:00', $endDate . ' 23:59:59'];
 
         return static::fieldRaw("DATE(created_at) as date,
-            SUM(CASE WHEN event_type = 'page_view_home' THEN 1 ELSE 0 END) as home_pv,
-            SUM(CASE WHEN event_type = 'page_view_goods_detail' THEN 1 ELSE 0 END) as detail_pv,
-            SUM(CASE WHEN event_type IN ('click_add_cart','click_buy_now') THEN 1 ELSE 0 END) as cart_pv,
-            SUM(CASE WHEN event_type = 'page_view_checkout' THEN 1 ELSE 0 END) as checkout_pv,
-            SUM(CASE WHEN event_type = 'payment_success' THEN 1 ELSE 0 END) as payment_pv")
+            COUNT(DISTINCT CASE WHEN event_type = 'page_view_home' THEN CASE WHEN user_id > 0 THEN user_id ELSE session_id END END) as home_uv,
+            COUNT(DISTINCT CASE WHEN event_type = 'page_view_goods_detail' THEN CASE WHEN user_id > 0 THEN user_id ELSE session_id END END) as detail_uv,
+            COUNT(DISTINCT CASE WHEN event_type IN ('click_add_cart','click_buy_now') THEN CASE WHEN user_id > 0 THEN user_id ELSE session_id END END) as cart_uv,
+            COUNT(DISTINCT CASE WHEN event_type = 'page_view_checkout' THEN CASE WHEN user_id > 0 THEN user_id ELSE session_id END END) as checkout_uv,
+            COUNT(DISTINCT CASE WHEN event_type = 'payment_success' THEN CASE WHEN user_id > 0 THEN user_id ELSE session_id END END) as payment_uv")
             ->whereTime('created_at', 'between', $timeRange)
             ->group('DATE(created_at)')
             ->order('date', 'asc')
@@ -209,21 +209,25 @@ class UserEvent extends Model
             ->select()
             ->toArray();
 
-        // 添加 bounce_count 和 bounce_rate（基于 page_view_durations 表）
-        foreach ($stats as &$stat) {
-            $bounceCount = PageViewDuration::where('page', $stat['page'])
+        // 批量查询 bounce_count 和 avg_duration（避免 N+1 查询）
+        $pages = array_column($stats, 'page');
+        $durationStats = [];
+        if (!empty($pages)) {
+            $durationStats = PageViewDuration::whereIn('page', $pages)
                 ->whereTime('created_at', 'between', $timeRange)
-                ->where('duration_ms', '<', 3000)
-                ->count();
-            $stat['bounce_count'] = $bounceCount;
-            $stat['bounce_rate'] = $stat['pv'] > 0
-                ? round(($bounceCount / $stat['pv']) * 100, 2)
-                : 0;
+                ->fieldRaw('page, SUM(CASE WHEN duration_ms < 3000 THEN 1 ELSE 0 END) as bounce_count, ROUND(AVG(duration_ms)) as avg_duration_ms')
+                ->group('page')
+                ->select()
+                ->column(null, 'page');
+        }
 
-            $avgDuration = PageViewDuration::where('page', $stat['page'])
-                ->whereTime('created_at', 'between', $timeRange)
-                ->avg('duration_ms');
-            $stat['avg_duration_ms'] = (int)($avgDuration ?? 0);
+        foreach ($stats as &$stat) {
+            $ds = $durationStats[$stat['page']] ?? null;
+            $stat['bounce_count'] = $ds ? (int)$ds['bounce_count'] : 0;
+            $stat['avg_duration_ms'] = $ds ? (int)$ds['avg_duration_ms'] : 0;
+            $stat['bounce_rate'] = $stat['pv'] > 0
+                ? round(($stat['bounce_count'] / $stat['pv']) * 100, 2)
+                : 0;
         }
 
         return $stats;
