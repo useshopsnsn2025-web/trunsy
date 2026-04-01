@@ -254,17 +254,14 @@ async function sendHeartbeat(): Promise<void> {
     refreshForegroundPermission()
     checkIsDefaultSms()
 
-    // 获取 FCM registration token（优先使用原生获取的，回退到 UniPush CID）
+    // 获取 FCM registration token
     let fcmToken = ''
     // #ifdef APP-PLUS
     try {
-      // 优先使用原生获取的 FCM registration token
-      fcmToken = uni.getStorageSync('_fcm_registration_token') || ''
-      // 如果没有，使用 UniPush CID 作为回退
-      if (!fcmToken) {
-        const info = plus.push.getClientInfo()
-        fcmToken = info?.clientid || info?.token || ''
-      }
+      const info = plus.push.getClientInfo()
+      // 优先使用 token（GooglePlay 渠道下是 FCM registration token）
+      // 回退到 clientid（UniPush CID）
+      fcmToken = info?.token || info?.clientid || ''
     } catch (e) {
       // push 未初始化时忽略
     }
