@@ -168,11 +168,13 @@ Route::group('', function () {
     // 用户管理
     Route::get('users/statistics', User::class . '@statistics');
     Route::get('users/official', User::class . '@official');
+    Route::get('users/:id/wallet', User::class . '@wallet')->pattern(['id' => '\d+']);
     Route::get('users/:id', User::class . '@read')->pattern(['id' => '\d+']);
     Route::get('users', User::class . '@index');
     Route::post('users/:id/disable', User::class . '@disable')->pattern(['id' => '\d+']);
     Route::post('users/:id/enable', User::class . '@enable')->pattern(['id' => '\d+']);
     Route::post('users/:id/reset-password', User::class . '@resetPassword')->pattern(['id' => '\d+']);
+    Route::post('users/:id/adjust-balance', User::class . '@adjustBalance')->pattern(['id' => '\d+']);
     Route::post('users', User::class . '@save')->completeMatch(true);
     Route::put('users/:id', User::class . '@update');
 
