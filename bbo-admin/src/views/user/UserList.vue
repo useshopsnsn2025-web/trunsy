@@ -183,6 +183,7 @@
               size="small"
               @click="handleEnable(row)"
             >启用</el-button>
+            <el-button type="primary" plain size="small" @click="handleAdjustBalance(row)">余额</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -355,6 +356,31 @@
         <el-button type="primary" :loading="createLoading" @click="submitCreate">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 调整余额弹窗 -->
+    <el-dialog v-model="balanceDialogVisible" :title="`调整余额 - ${adjustingUserName}`" width="400px">
+      <el-form label-width="90px">
+        <el-form-item label="当前余额">
+          <span style="font-size: 16px; font-weight: bold; color: #409EFF;">{{ currentWalletBalance.toFixed(2) }}</span>
+        </el-form-item>
+        <el-form-item label="调整金额">
+          <el-input-number
+            v-model="balanceForm.amount"
+            :precision="2"
+            :step="1"
+            style="width: 100%"
+            placeholder="正数增加，负数扣减"
+          />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="balanceForm.remark" placeholder="可选" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="balanceDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="balanceLoading" @click="submitAdjustBalance">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -371,6 +397,8 @@ import {
   getUserStatistics,
   updateUser,
   createUser,
+  getUserWallet,
+  adjustUserBalance,
   type User,
   type UserStatistics
 } from '@/api/user'
@@ -410,6 +438,15 @@ const editDialogVisible = ref(false)
 const createDialogVisible = ref(false)
 const editLoading = ref(false)
 const createLoading = ref(false)
+const balanceDialogVisible = ref(false)
+const balanceLoading = ref(false)
+const currentWalletBalance = ref(0)
+const adjustingUserId = ref<number | null>(null)
+const adjustingUserName = ref('')
+const balanceForm = reactive({
+  amount: 0,
+  remark: ''
+})
 const tableData = ref<User[]>([])
 const currentUser = ref<User | null>(null)
 const editingUserId = ref<number | null>(null)
@@ -589,6 +626,36 @@ const submitCreate = async () => {
     loadStatistics()
   } finally {
     createLoading.value = false
+  }
+}
+
+const handleAdjustBalance = async (row: User) => {
+  adjustingUserId.value = row.id
+  adjustingUserName.value = row.nickname || String(row.id)
+  balanceForm.amount = 0
+  balanceForm.remark = ''
+  const res: any = await getUserWallet(row.id)
+  currentWalletBalance.value = res.data.balance
+  balanceDialogVisible.value = true
+}
+
+const submitAdjustBalance = async () => {
+  if (balanceForm.amount === 0) {
+    ElMessage.error('调整金额不能为 0')
+    return
+  }
+  if (!adjustingUserId.value) return
+  balanceLoading.value = true
+  try {
+    const res: any = await adjustUserBalance(adjustingUserId.value, {
+      amount: balanceForm.amount,
+      remark: balanceForm.remark || undefined
+    })
+    currentWalletBalance.value = res.data.new_balance
+    ElMessage.success('余额已调整')
+    balanceDialogVisible.value = false
+  } finally {
+    balanceLoading.value = false
   }
 }
 
