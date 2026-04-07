@@ -5,6 +5,7 @@ namespace app\admin\controller;
 
 use think\Response;
 use app\common\model\User as UserModel;
+use app\common\model\UserWallet;
 
 /**
  * 用户管理控制器
@@ -290,5 +291,57 @@ class User extends Base
             'active_users' => $activeUsers,
             'online_users' => $onlineUsers,
         ]);
+    }
+
+    /**
+     * 获取用户钱包信息
+     * @param int $id
+     * @return Response
+     */
+    public function wallet(int $id): Response
+    {
+        $user = UserModel::find($id);
+        if (!$user) {
+            return $this->error('User not found', 404);
+        }
+
+        $wallet = UserWallet::getOrCreate($id);
+
+        return $this->success([
+            'balance'        => (float) $wallet->balance,
+            'frozen'         => (float) $wallet->frozen,
+            'total_income'   => (float) $wallet->total_income,
+            'total_withdraw' => (float) $wallet->total_withdraw,
+        ]);
+    }
+
+    /**
+     * 调整用户余额
+     * @param int $id
+     * @return Response
+     */
+    public function adjustBalance(int $id): Response
+    {
+        $user = UserModel::find($id);
+        if (!$user) {
+            return $this->error('User not found', 404);
+        }
+
+        $amount = (float) input('post.amount', 0);
+        if ($amount == 0) {
+            return $this->error('Amount cannot be zero');
+        }
+
+        $wallet = UserWallet::getOrCreate($id);
+        $newBalance = $wallet->balance + $amount;
+
+        if ($newBalance < 0) {
+            return $this->error('Insufficient balance');
+        }
+
+        $wallet->balance = $newBalance;
+        $wallet->save();
+
+        return $this->success(['new_balance' => (float) $newBalance]);
     }
 }
