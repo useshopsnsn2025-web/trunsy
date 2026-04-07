@@ -99,3 +99,13 @@ export function getUserStatistics() {
 export function getOfficialUsers() {
   return request.get('/users/official')
 }
+
+// 获取用户钱包信息
+export function getUserWallet(id: number) {
+  return request.get(`/users/${id}/wallet`)
+}
+
+// 调整用户余额（amount 为正数增加，负数扣减）
+export function adjustUserBalance(id: number, data: { amount: number; remark?: string }) {
+  return request.post(`/users/${id}/adjust-balance`, data)
+}
