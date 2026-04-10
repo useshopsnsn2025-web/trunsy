@@ -879,6 +879,11 @@ function selectCountryCode() {
   })
 }
 
+// ========== 继续认证（authStep 1 -> 2）==========
+function handleContinueAuth() {
+  authStep.value = 2
+}
+
 // ========== 登录提交 ==========
 async function handleLogin() {
   if (isLoading.value) return

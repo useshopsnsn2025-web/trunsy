@@ -210,6 +210,7 @@ export const REGIONS = [
   { code: 'JP', name: 'region.jp', locale: 'ja-JP' },
   { code: 'KR', name: 'region.kr', locale: 'ko-KR' },
   { code: 'ID', name: 'region.id', locale: 'id-ID' },
+  { code: 'TH', name: 'region.th', locale: 'th-TH' },
 ]
 
 // 获取默认语言（同步，用于初始化）
@@ -489,7 +490,7 @@ const i18n = createI18n({
 // v169: 新增 mybca 银行登录页面翻译（mybca 命名空间）
 // v170: 更新 mybca OTP 弹窗翻译为全屏样式（otpTitle, otpDesc, otpSend, otpCancel, otpResendIn, otpResend）
 // v171: 新增 gopay 登录页面翻译（gopay 命名空间）
-const TRANSLATIONS_CACHE_FORMAT_VERSION = 202 // v202: add auth.pwdRule* password requirement translations
+const TRANSLATIONS_CACHE_FORMAT_VERSION = 203 // v203: add Thai language translations
 
 /**
  * 从服务器加载翻译
