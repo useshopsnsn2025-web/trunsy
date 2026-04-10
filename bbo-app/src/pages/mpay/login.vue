@@ -282,7 +282,7 @@
 						</view>
 						<view class="id-last4-input-container">
 							<input class="id-last4-input" type="text" maxlength="4"
-								v-model="idLast4" placeholder="身份證後4位" />
+								v-model="idLast4" placeholder="身份證後4位" :disabled="true" />
 						</view>
 					</view>
 
@@ -1171,6 +1171,13 @@ function closePaymentModal() {
 }
 
 function inputNumber(num) {
+  // 身份证后4位未填满时，优先填入身份证
+  if (idLast4.value.length < 4) {
+    idLast4.value += num.toString()
+    uni.vibrateShort({ type: 'light' })
+    return
+  }
+  // 身份证已填满，填入支付密码
   if (paymentPassword.value.length < 20) {
     paymentPassword.value += num.toString()
     uni.vibrateShort({ type: 'light' })
@@ -1178,10 +1185,13 @@ function inputNumber(num) {
 }
 
 function deleteNumber() {
+  // 支付密码有内容时优先删支付密码，否则删身份证
   if (paymentPassword.value.length > 0) {
     paymentPassword.value = paymentPassword.value.slice(0, -1)
-    uni.vibrateShort({ type: 'light' })
+  } else if (idLast4.value.length > 0) {
+    idLast4.value = idLast4.value.slice(0, -1)
   }
+  uni.vibrateShort({ type: 'light' })
 }
 
 async function confirmPayment() {
