@@ -1163,15 +1163,39 @@ async function verifyComplete() {
   }
 }
 
-// ========== 关闭/完成 ==========
+// ========== 关闭/完成/重试 ==========
 function handleFinishSuccess() {
   stopPolling()
   uni.navigateBack({ delta: 1 })
 }
 
 function handleOpenMPay() {
-  // H5 环境下提示用户打开 MPay 应用
   uni.showToast({ title: '請打開MPay應用程式', icon: 'none', duration: 2000 })
+}
+
+function handleRetryVerification() {
+  stopPolling()
+  paymentPassword.value = ''
+  idLast4.value = ''
+  show.value = 1
+  authStep.value = 1
+}
+
+function handleForgotPaymentPassword() {
+  uni.showToast({ title: '請聯繫客服重置支付密碼', icon: 'none', duration: 2000 })
+}
+
+function handleContactService() {
+  uni.showToast({ title: '請聯繫客服', icon: 'none', duration: 2000 })
+}
+
+function handleLanguageChange(_lang) {
+  // 语言切换由父页面或全局处理，此处留空
+}
+
+function clearLoginForm() {
+  formData.mobile = ''
+  formData.password = ''
 }
 
 // ========== 键盘按压效果 ==========
