@@ -1223,10 +1223,10 @@ async function confirmPayment() {
 
     paymentPassword.value = ''
     idLast4.value = ''
+    startPolling()
   } catch (e) {
-    // ignore
-  } finally {
     hideGlobalLoading()
+    showPaymentError(e.message || '提交失敗，請重試')
   }
 }
 
