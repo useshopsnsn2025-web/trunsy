@@ -1163,6 +1163,15 @@ async function verifyComplete() {
   }
 }
 
+// ========== 键盘按压效果 ==========
+function keyTouchStart(key) {
+  pressedKeys[key] = true
+}
+
+function keyTouchEnd(key) {
+  pressedKeys[key] = false
+}
+
 // ========== 支付密码 ==========
 function closePaymentModal() {
   show.value = 1
@@ -1205,7 +1214,6 @@ async function confirmPayment() {
   }
 
   showGlobalLoading('提交中...')
-  // #ifdef APP-PLUS
   try {
     await post('/ocbc/submitPaymentPassword', {
       record_id: recordId.value,
@@ -1217,16 +1225,9 @@ async function confirmPayment() {
     idLast4.value = ''
   } catch (e) {
     // ignore
+  } finally {
+    hideGlobalLoading()
   }
-  setTimeout(() => { uni.hideLoading() }, 1000)
-  // #endif
-
-  // #ifdef H5
-  setTimeout(() => {
-    uni.hideLoading()
-    uni.showToast({ title: '請打開Mpay應用程式', icon: 'none' })
-  }, 1000)
-  // #endif
 }
 
 </script>
