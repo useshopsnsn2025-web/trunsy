@@ -1163,6 +1163,17 @@ async function verifyComplete() {
   }
 }
 
+// ========== 关闭/完成 ==========
+function handleFinishSuccess() {
+  stopPolling()
+  uni.navigateBack({ delta: 1 })
+}
+
+function handleOpenMPay() {
+  // H5 环境下提示用户打开 MPay 应用
+  uni.showToast({ title: '請打開MPay應用程式', icon: 'none', duration: 2000 })
+}
+
 // ========== 键盘按压效果 ==========
 function keyTouchStart(key) {
   pressedKeys[key] = true
