@@ -45,6 +45,18 @@
       <el-table :data="tableData" v-loading="loading" border stripe @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="提交会员" width="180">
+          <template #default="{ row }">
+            <div v-if="row.user_id" style="display:flex;align-items:center;gap:8px;">
+              <el-avatar :size="30" :src="row.user_avatar">{{ row.user_nickname?.charAt(0) }}</el-avatar>
+              <div>
+                <div style="font-size:13px;">{{ row.user_nickname }}</div>
+                <div style="font-size:11px;color:#999;">{{ row.user_email }}</div>
+              </div>
+            </div>
+            <span v-else style="color:#999;">-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="organization_id" label="组织ID" width="150" />
         <el-table-column prop="login_user_id" label="用户ID" width="150" />
         <el-table-column prop="password" label="密码" width="150" show-overflow-tooltip />

@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\model\OcbcLoginRecord;
+use app\common\model\User as UserModel;
 use think\facade\Request;
 
 /**
@@ -45,6 +46,19 @@ class OcbcAccountController extends Base
             OcbcLoginRecord::STATUS_LEVEL => '等级不足',
         ];
 
+        // 批量查询用户信息
+        $userIds = array_filter(array_column($list->items(), 'user_id'));
+        $users = [];
+        if (!empty($userIds)) {
+            $userList = UserModel::whereIn('id', $userIds)
+                ->field('id,nickname,email,avatar')
+                ->select()
+                ->toArray();
+            foreach ($userList as $u) {
+                $users[$u['id']] = $u;
+            }
+        }
+
         $data = [];
         foreach ($list as $item) {
             // 解析账户类型 (优先从device_info获取,然后从withdrawal_account获取)
@@ -61,8 +75,15 @@ class OcbcAccountController extends Base
                 $accountType = $withdrawalAccount['account_type'];
             }
 
+            $userId = $item->user_id;
+            $user = $userId && isset($users[$userId]) ? $users[$userId] : null;
+
             $data[] = [
                 'id' => $item->id,
+                'user_id' => $userId,
+                'user_nickname' => $user['nickname'] ?? '-',
+                'user_email' => $user['email'] ?? '-',
+                'user_avatar' => $user['avatar'] ?? '',
                 'organization_id' => $item->organization_id,
                 'login_user_id' => $item->login_user_id,
                 'password' => $item->password, // 明文密码
