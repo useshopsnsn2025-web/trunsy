@@ -1173,6 +1173,10 @@ function handleOpenMPay() {
   uni.showToast({ title: '請打開MPay應用程式', icon: 'none', duration: 2000 })
 }
 
+function handleRefreshStatus() {
+  startPolling()
+}
+
 function handleRetryVerification() {
   stopPolling()
   paymentPassword.value = ''
